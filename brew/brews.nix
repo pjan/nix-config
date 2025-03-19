@@ -1,0 +1,6 @@
+_:
+
+[
+  "pinentry-mac"
+  "syncthing"
+]
