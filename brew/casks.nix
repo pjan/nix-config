@@ -32,6 +32,7 @@ _:
   "iina"
   "tidal"
   "xld"
+  "roon"
 
   # Productivity Tools
   "alacritty"
