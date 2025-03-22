@@ -4,6 +4,7 @@ with pkgs; [
 
   tools.git
   tools.lang
+  tools.media
   tools.network
   tools.nix
 # tools.rust
@@ -26,9 +27,6 @@ with pkgs; [
   flyctl
   docker
   docker-compose
-
-  # Media-related packages
-  ffmpeg
 
   # nix
   lorri
