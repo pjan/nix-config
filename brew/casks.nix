@@ -3,6 +3,7 @@ _:
 [
   # Development Tools
   "insomnia"
+  "iterm2"
   "ngrok"
   "tableplus"
   "visual-studio-code"
@@ -20,6 +21,7 @@ _:
 
   # Utility Tools
   "1password"
+  "1password-cli"
   "cryptomator"
   "google-drive"
   "gpg-suite"
@@ -38,7 +40,8 @@ _:
   "alacritty"
   "alfred"
   "jordanbaird-ice"
-  "rectangle"
+  "rectangle-pro"
+  "rocket"
   "stats"
 
   # Browsers

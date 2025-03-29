@@ -78,8 +78,8 @@ in {
       NSUseAnimatedFocusRing = false;
       NSScrollAnimationEnabled = true;
       NSWindowResizeTime = 0.001;
-      InitialKeyRepeat = 15;
-      KeyRepeat = 2;
+      InitialKeyRepeat = 10;
+      KeyRepeat = 1;
       PMPrintingExpandedStateForPrint = true;
       PMPrintingExpandedStateForPrint2 = true;
       "com.apple.mouse.tapBehavior" = null;

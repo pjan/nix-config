@@ -9,8 +9,10 @@
   - [3. Install keys](#3-install-keys)
   - [4. Clone this repository](#4-clone-this-repository)
   - [5. Make apps executable](#5-make-apps-executable)
-  - [6. Build the configuration](#6-build-the-configuration)
-  - [7. Deploy the configuration](#7-deploy-the-configuration)
+  - [6. Fix preps](#6-fix-preps)
+  - [7. Build the configuration](#7-build-the-configuration)
+  - [8. Deploy the configuration](#8-deploy-the-configuration)
+  - [9. Manual setups and configurations]()
 
 ## Layout
 
@@ -77,7 +79,7 @@ curl -Lo ssh.zip https://github.com/pjan/archives/raw/refs/heads/main/ssh.zip &&
 With all the necessary keys installed, you can now clone this repository. Change directory to where you want to store the repo locally, and clone it:
 
 ```sh
-git@github.com:pjan/nix-config.git
+git clone git@github.com:pjan/nix-config.git
 ```
 
 ### 5. Make apps executable
@@ -88,7 +90,13 @@ Change directory to the repo, and make all
 find apps/$(uname -m | sed 's/arm64/aarch64/')-darwin -type f \( -name apply -o -name build -o -name build-switch -o -name rollback \) -exec chmod +x {} \;
 ```
 
-### 6. Build the configuration
+### 6. Fix preps
+
+```sh
+sudo rm ~/.config
+```
+
+### 7. Build the configuration
 
 You can ensure the build works before deploying the configuration. To do so, execute:
 
@@ -96,12 +104,41 @@ You can ensure the build works before deploying the configuration. To do so, exe
 nix run .#build
 ```
 
-### 7. Deploy the configuration
+### 8. Deploy the configuration
 
 Finally, update the system by deploying the configuration:
 
 ```sh
 nix run .#build-switch
+```
+
+### 9. Manual setups and configurations
+
+Some of the apps that have been installed require to be started, get permissions granted and/or configured manually.
+
+Configure NPM so the global install works
+
+```sh
+npm set prefix ~/.local/lib
+```
+
+- 1password: login, enable command line cli
+- Cryptomator: add vaults, start at login
+- Chrome: login
+- ExpressVPN (vpn): login
+- Ice (menu bar manager): config, start at login
+- Stats: start at login
+- Alfred (app launcher): license, install automation tasks, replace default spotlight with alfred, theme, start at login, workflows
+- Rectangle pro (tiling window manager): license, start at login
+- Rocket (emoji expansion): start at login
+- Syncthing: On synthing bookmark in chrome - configure by adding folders and devices
+- Tailscale (vpn & networking): login
+- Tidal: login
+
+Alfred workflow for expressvpn
+
+```sh
+npm install --global alfred-expressvpn
 ```
 
 ## Updating the configuration
