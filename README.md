@@ -122,6 +122,7 @@ Configure NPM so the global install works
 npm set prefix ~/.local/lib
 ```
 
+- App Store: Download apps
 - 1password: login, enable command line cli
 - Cryptomator: add vaults, start at login
 - Chrome: login
