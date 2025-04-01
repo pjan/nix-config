@@ -74,13 +74,15 @@ The configuration keeps secrets secret with agenix. In order to deploy the secre
 curl -Lo ssh.zip https://github.com/pjan/archives/raw/refs/heads/main/ssh.zip && unzip ssh.zip -d ~/.ssh && rm ssh.zip
 ```
 
-### 4. Clone this repository
+### 4. Clone this repository and configure with variables
 
 With all the necessary keys installed, you can now clone this repository. Change directory to where you want to store the repo locally, and clone it:
 
 ```sh
 git clone git@github.com:pjan/nix-config.git
 ```
+
+Once the repo is cloned, edit the `config.nix` file with the variables you want set.
 
 ### 5. Make apps executable
 

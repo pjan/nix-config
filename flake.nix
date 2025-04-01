@@ -64,15 +64,6 @@
 
       vars = import ./config.nix;
 
-      # vars = {
-      #   user.name = config.user.name;
-      #   user.email = config.user.email;
-      #   hostname = config.user.hostname;
-      #   # user.name = "pjan";
-      #   # user.email = "pjan@vandaele.io";
-      #   # hostname = "AKIRA";
-      # };
-
       system = "aarch64-darwin";
 
       overlays =
