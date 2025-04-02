@@ -126,11 +126,11 @@ npm set prefix ~/.local/lib
 
 - App Store: Download apps
 - 1password: login, enable command line cli
-- Cryptomator: add vaults, start at login
 - Chrome: login
 - ExpressVPN (vpn): login
+- Hyperkey (a hyperkey): config, start at login
 - Ice (menu bar manager): config, start at login
-- Stats: start at login
+- Stats (menu bar stats): start at login
 - Alfred (app launcher): license, install automation tasks, replace default spotlight with alfred, theme, start at login, workflows
 - Rectangle pro (tiling window manager): license, start at login
 - Rocket (emoji expansion): start at login

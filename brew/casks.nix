@@ -22,7 +22,7 @@ _:
   # Utility Tools
   "1password"
   "1password-cli"
-  "cryptomator"
+  # "cryptomator"
   "google-drive"
   "gpg-suite"
   # "fuse-t"
@@ -39,6 +39,7 @@ _:
   # Productivity Tools
   "alacritty"
   "alfred"
+  "hyperkey"
   "jordanbaird-ice"
   "rectangle-pro"
   "rocket"
