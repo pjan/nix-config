@@ -32,9 +32,10 @@ _:
   # Media Tools
   "calibre"
   "iina"
+  "roon"
   "tidal"
   "xld"
-  "roon"
+  "yacreader"
 
   # Productivity Tools
   "alacritty"
