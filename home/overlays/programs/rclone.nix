@@ -2,12 +2,12 @@
 
 let
 
-  cfg = config.programs.rclone;
+  cfg = config.programs.r-clone;
   iniFormat = pkgs.formats.ini { };
 
 in {
   options = {
-    programs.rclone = {
+    programs.r-clone = {
       enable = lib.mkEnableOption "rclone";
 
       package = lib.mkPackageOption pkgs "rclone" { };

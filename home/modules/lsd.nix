@@ -8,7 +8,7 @@ in {
 
   programs.lsd = {
     enable = true;
-    enableAliases = true;
+    enableZshIntegration = true;
   };
 
   xdg.configFile."lsd/config.yaml".source = ../files/lsd_config.yaml;
