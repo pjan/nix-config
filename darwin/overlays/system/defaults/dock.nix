@@ -51,16 +51,16 @@ in {
             (entry: "${entryURI entry.path}\n")
             cfg.entries;
           createEntries = concatMapStrings
-            (entry: "${dockutil}/bin/dockutil --no-restart --add '${entry.path}' --section ${entry.section} ${entry.options} ${config.home.homeDirectory}\n")
+            (entry: "${dockutil}/bin/dockutil --allhomes --no-restart --add '${entry.path}' --section ${entry.section} ${entry.options} ${config.home.homeDirectory}\n")
             cfg.entries;
         in
         {
-          system.activationScripts.postUserActivation.text = ''
+          system.activationScripts.postActivation.text = ''
             echo >&2 "Setting up the Dock..."
-            haveURIs="$(${dockutil}/bin/dockutil --list | ${pkgs.coreutils}/bin/cut -f2)"
+            haveURIs="$(${dockutil}/bin/dockutil --list --allhomes | ${pkgs.coreutils}/bin/cut -f2)"
             if ! diff -wu <(echo -n "$haveURIs") <(echo -n '${wantURIs}') >&2 ; then
               echo >&2 "Resetting Dock."
-              ${dockutil}/bin/dockutil --no-restart --remove all
+              ${dockutil}/bin/dockutil --allhomes --no-restart --remove all
               ${createEntries}
               ${killall}/bin/killall Dock
             else

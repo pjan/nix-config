@@ -21,6 +21,7 @@ in {
 
   system.stateVersion = 5;
   system.checks.verifyNixPath = false;
+  system.primaryUser = userName;
 
   imports = [ ./overlays ] ++ lib.filter
               (n: lib.strings.hasSuffix ".nix" n)

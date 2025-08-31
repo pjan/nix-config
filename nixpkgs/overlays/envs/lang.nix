@@ -22,6 +22,6 @@ pkgs.buildEnv {
     ctags
     rtags
     sbcl
-    sloccount
+    loccount
   ];
 }

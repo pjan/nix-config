@@ -34,7 +34,7 @@ with pkgs; [
   # Node.js development tools
   nodePackages.npm # globally install npm
   nodePackages.prettier
-  nodejs
+  # nodejs
 
   # Text and terminal utilities
   hunspell
