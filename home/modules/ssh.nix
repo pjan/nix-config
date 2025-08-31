@@ -8,13 +8,19 @@ in {
 
   programs.ssh = {
     enable = true;
+    enableDefaultConfig = false;
 
-    forwardAgent = true;
-    compression = true;
-    serverAliveInterval = 60;
-
-    hashKnownHosts = true;
-    #userKnownHostsFile = "${xdg.configHome}/ssh/known_hosts";
+    matchBlocks."*" = {
+      forwardAgent = true;
+      compression = true;
+      serverAliveInterval = 60;
+      serverAliveCountMax = 3;
+      hashKnownHosts = true;
+      userKnownHostsFile = "${config.home.homeDirectory}/.ssh/known_hosts";
+      controlMaster = "no";
+      controlPath = "${config.home.homeDirectory}/.ssh/master-%r@%n:%p";
+      controlPersist = "no";
+    };
 
   };
 

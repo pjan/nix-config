@@ -10,7 +10,7 @@ in {
 
     autocd = true;
 
-    dotDir = ".config/zsh";
+    dotDir = "${config.xdg.configHome}/zsh";
 
     history = {
       append = true;
