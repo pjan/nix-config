@@ -124,6 +124,7 @@ Configure NPM so the global install works
 npm set prefix ~/.local/lib
 ```
 
+- iterm2: preferences > settings > load settings from `~/.config/iterm2/`, saving changes manually (but don't press save)
 - App Store: Download apps
 - 1password: login, enable command line cli
 - Chrome: login
