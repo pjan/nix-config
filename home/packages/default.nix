@@ -2,7 +2,9 @@
 
 with pkgs; [
 
+  tools.dev
   tools.git
+  tools.js
   tools.lang
   tools.media
   tools.network
@@ -10,8 +12,6 @@ with pkgs; [
 # tools.rust
   tools.security
   tools.system
-
-
 
   # General packages for development and system management
   btop
@@ -22,19 +22,6 @@ with pkgs; [
   age
   age-plugin-yubikey
   libfido2
-
-  # Cloud-related tools and SDKs
-  flyctl
-  docker
-  docker-compose
-
-  # nix
-  lorri
-
-  # Node.js development tools
-  nodePackages.npm # globally install npm
-  nodePackages.prettier
-  # nodejs
 
   # Text and terminal utilities
   hunspell

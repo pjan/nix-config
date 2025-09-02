@@ -10,7 +10,7 @@ pkgs.buildEnv {
     nodejs
     nodePackages.eslint
     nodePackages.csslint
+    nodePackages.prettier
     yq
-    # jquery
   ];
 }
