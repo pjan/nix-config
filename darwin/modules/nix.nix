@@ -10,8 +10,16 @@ in {
 
     settings = {
       trusted-users = [ "@admin" "${config.user.name}" ];
-      substituters = [ "https://nix-community.cachix.org" "https://cache.nixos.org" ];
-      trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" ];
+      substituters = [
+        "https://cache.nixos.org"
+        "https://nix-community.cachix.org"
+        "s3://io-vandaele-nix-cache?endpoint=https://storage.googleapis.com&profile=gcp"
+      ];
+      trusted-public-keys = [
+        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "io-vandaele-nix-cache-1:O9fdSbSnySVmQFa353NjmU/lP5GifyVfOmDM2XhBs8Q="
+      ];
     };
 
     gc = {
