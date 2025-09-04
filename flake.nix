@@ -100,6 +100,7 @@
 
       apps.${system} = {
         "build" = mkApp "build" ;
+        "build-cache" = mkApp "build-cache" ;
         "build-switch" = mkApp "build-switch" ;
         "rollback" = mkApp "rollback" ;
       };
