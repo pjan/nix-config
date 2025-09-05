@@ -82,7 +82,17 @@ With all the necessary keys installed, you can now clone this repository. Change
 git clone git@github.com:pjan/nix-config.git
 ```
 
-Once the repo is cloned, edit the `config.nix` file with the variables you want set.
+Once the repo is cloned, change directory into it, and edit the `config.nix` file with the variables you want set.
+
+```sh
+cd nix-config && vi ./config.nix
+```
+
+You don't want those changes to be tracked or committed to the repo, which you can do by updating the repo index to assume no changes ever happen to the file
+
+```sh
+git update-index --assume-unchanged ./config.nix
+```
 
 ### 5. Make apps executable
 
@@ -95,7 +105,7 @@ find apps/$(uname -m | sed 's/arm64/aarch64/')-darwin -type f \( -name apply -o 
 ### 6. Fix preps
 
 ```sh
-sudo rm ~/.config
+sudo rm ~/.config && mkdir ~/.config
 ```
 
 ### 7. Build the configuration

@@ -20,4 +20,4 @@ nix copy --to "s3://io-vandaele-nix-cache?endpoint=https://storage.googleapis.co
 echo "${YELLOW}Cleaning up...${NC}"
 unlink ./result
 
-echo "${GREEN}Switch to new generation complete!${NC}"
+echo "${GREEN}Build with copy to cache complete!${NC}"
