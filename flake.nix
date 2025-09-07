@@ -57,9 +57,14 @@
       url = git+ssh://git@github.com/pjan/nix-secrets.git;
       flake = false;
     };
+    # flake imports
+    beatport-dl = {
+      url = "github:pjan/beatport-dl";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, systems, nixpkgs, home-manager, darwin, nix-homebrew, agenix, homebrew-bundle, homebrew-core, homebrew-cask, flake-schemas, flake-utils, secrets } @inputs:
+  outputs = { self, systems, nixpkgs, home-manager, darwin, nix-homebrew, agenix, homebrew-bundle, homebrew-core, homebrew-cask, flake-schemas, flake-utils, secrets, beatport-dl } @inputs:
     let
 
       vars = import ./config.nix;
@@ -68,11 +73,18 @@
 
       overlays =
         # Apply each overlay found in the /overlays directory
-        let path = ./nixpkgs/overlays; in with builtins;
-        map (n: import (path + ("/" + n)))
-            (filter (n: match ".*\\.nix" n != null ||
+        let
+          path = ./nixpkgs/overlays;
+          importOverlays = with builtins;
+            map (n: import (path + ("/" + n)))
+              (filter (n: match ".*\\.nix" n != null ||
                         pathExists (path + ("/" + n + "/default.nix")))
                     (attrNames (readDir path)));
+          flakeOverlays = [
+            beatport-dl.overlays."${system}".default
+          ];
+        in
+          importOverlays ++ flakeOverlays;
 
 
       devShell = let pkgs = nixpkgs.legacyPackages.${system}.appendOverlays overlays; in {
