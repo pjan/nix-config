@@ -1,4 +1,4 @@
-{ config, homebrew-bundle, homebrew-cask, homebrew-core, lib, pkgs, vars,... }:
+{ config, homebrew-bundle, homebrew-cask, homebrew-core, homebrew-subtlesoft, lib, pkgs, vars,... }:
 
 let
 
@@ -11,6 +11,7 @@ in {
       "homebrew/homebrew-bundle" = homebrew-bundle;
       "homebrew/homebrew-cask" = homebrew-cask;
       "homebrew/homebrew-core" = homebrew-core;
+      "nicowald/homebrew-subtlesoft" = homebrew-subtlesoft;
     };
     mutableTaps = false;
     autoMigrate = true;

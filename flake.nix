@@ -46,6 +46,10 @@
       url = github:homebrew/homebrew-cask;
       flake = false;
     };
+    homebrew-subtlesoft = {
+      url = github:nicowald/homebrew-subtlesoft;
+      flake = false;
+    };
     flake-schemas = {
       url = github:DeterminateSystems/flake-schemas;
     };
@@ -64,7 +68,7 @@
     };
   };
 
-  outputs = { self, systems, nixpkgs, home-manager, darwin, nix-homebrew, agenix, homebrew-bundle, homebrew-core, homebrew-cask, flake-schemas, flake-utils, secrets, beatport-dl } @inputs:
+  outputs = { self, systems, nixpkgs, home-manager, darwin, nix-homebrew, agenix, homebrew-bundle, homebrew-core, homebrew-cask, homebrew-subtlesoft, flake-schemas, flake-utils, secrets, beatport-dl } @inputs:
     let
 
       vars = import ./config.nix;

@@ -32,6 +32,7 @@ _:
   # Media Tools
   "calibre"
   "iina"
+  "midipipe"
   "roon"
   "tidal"
   "xld"
