@@ -7,17 +7,17 @@ pkgs.buildEnv {
     colordiff
     diffstat
     diffutils
-    gitAndTools.ghi
-    gitAndTools.gist
-    gitAndTools.git-cliff
-    gitAndTools.git-crypt
-    (lowPrio gitAndTools.git-fame)
-    gitAndTools.git-secret
-    gitAndTools.gitRepo
-    gitAndTools.hub
-    gitAndTools.tig
-    # gitAndTools.git-annex
-    # gitAndTools.git-annex-remote-rclone
+    ghi
+    gist
+    git-cliff
+    git-crypt
+    (lib.lowPrio git-fame)
+    git-secret
+    gitRepo
+    hub
+    tig
+    # git-annex
+    # git-annex-remote-rclone
     patch
     patchutils
   ];

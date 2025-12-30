@@ -11,7 +11,7 @@ in {
       hack-font
       feather-font
       noto-fonts
-      noto-fonts-emoji
+      # noto-fonts-emoji
       meslo-lgs-nf
       twemoji-color-font
       nerd-fonts.hack

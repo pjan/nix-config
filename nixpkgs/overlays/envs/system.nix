@@ -10,7 +10,7 @@ pkgs.buildEnv {
     bashInteractive
     bat              # alternative to cat
     coreutils
-    csvkit
+    # csvkit
     ctop
     curl
     direnv

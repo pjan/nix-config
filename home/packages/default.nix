@@ -30,6 +30,8 @@ with pkgs; [
   yazi
 
   # Python packages
+  poetry
   python3
+  uv
   virtualenv
 ]
