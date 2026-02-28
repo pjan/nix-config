@@ -6,6 +6,5 @@ pkgs.buildEnv {
     beatport-dl
     ffmpeg
     tidal-dl
-    bpm-tag
   ];
 }
