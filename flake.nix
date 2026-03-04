@@ -66,9 +66,13 @@
       url = "github:pjan/beatport-dl";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    riptide = {
+      url = "github:pjan/riptide";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, systems, nixpkgs, home-manager, darwin, nix-homebrew, agenix, homebrew-bundle, homebrew-core, homebrew-cask, homebrew-subtlesoft, flake-schemas, flake-utils, secrets, beatport-dl } @inputs:
+  outputs = { self, systems, nixpkgs, home-manager, darwin, nix-homebrew, agenix, homebrew-bundle, homebrew-core, homebrew-cask, homebrew-subtlesoft, flake-schemas, flake-utils, secrets, beatport-dl, riptide } @inputs:
     let
 
       vars = import ./config.nix;
@@ -124,9 +128,14 @@
       darwinConfigurations.${system} =
         darwin.lib.darwinSystem {
           inherit system;
-          specialArgs = inputs // { inherit overlays vars; };
+          specialArgs = { inherit inputs overlays vars; } // inputs;
           modules = [
             home-manager.darwinModules.home-manager
+            {
+              home-manager.sharedModules = [
+                inputs.riptide.homeManagerModules.default
+              ];
+            }
             nix-homebrew.darwinModules.nix-homebrew
             agenix.darwinModules.default
             ./darwin # load the nix-darwin configuration

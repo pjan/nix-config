@@ -1,4 +1,4 @@
-{ config, inputs, lib, pkgs, ... }:
+{ config, inputs, lib, pkgs, vars, ... }:
 
 let
 
@@ -6,8 +6,8 @@ let
   configHome = config.xdg.configHome;
   dataHome = config.xdg.dataHome;
   stateHome = config.xdg.stateHome;
-  userName = config.user.name;
-  userEmail = config.user.email;
+  userName = vars.user.name;
+  userEmail = vars.user.email;
 
 in {
 

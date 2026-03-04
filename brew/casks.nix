@@ -8,6 +8,7 @@ _:
   "tableplus"
   "visual-studio-code"
   "wireshark"
+  "zed"
 
   # Communication Tools
   "discord"

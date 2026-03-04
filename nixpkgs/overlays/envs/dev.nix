@@ -8,6 +8,6 @@ pkgs.buildEnv {
     docker
     docker-compose
     google-cloud-sdk
-    zed-editor
+    # zed-editor
   ];
 }
