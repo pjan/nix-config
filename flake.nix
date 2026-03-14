@@ -6,10 +6,12 @@
     extra-substituters = [
       "https://cache.nixos.org"
       "https://cache.garnix.io"
+      "s3://io-vandaele-nix-cache?endpoint=https://storage.googleapis.com&profile=gcp"
     ];
     extra-trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+      "io-vandaele-nix-cache:O9fdSbSnySVmQFa353NjmU/lP5GifyVfOmDM2XhBs8Q="
     ];
   };
 
