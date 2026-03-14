@@ -59,6 +59,10 @@ in {
 
       # make a directory and cd into it
       mkd = "_mkd";
+
+      # open zeditor
+      zed = "${pkgs.zed-editor}/bin/zeditor";
+      code = "zed";
     };
 
     initContent = lib.mkBefore ''

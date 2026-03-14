@@ -15,7 +15,7 @@ with pkgs; [
 
   # General packages for development and system management
   btop
-  neofetch
+  fastfetch
   openssh
 
   # Encryption and security tools

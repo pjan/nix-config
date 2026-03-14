@@ -5,6 +5,7 @@ pkgs.buildEnv {
   paths = with pkgs; [
     beatport-dl
     ffmpeg
+    mkvtoolnix
     tidal-dl
   ];
 }
