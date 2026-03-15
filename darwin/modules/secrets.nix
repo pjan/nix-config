@@ -8,6 +8,7 @@
 
     secrets = {
 
+      # nix cache aws credentials for user
       "aws_credentials" = {
         symlink = true;
         path = "${config.xdg.configHome}/aws/credentials";
@@ -15,6 +16,14 @@
         mode = "644";
         owner = "${config.user.name}";
         group = "staff";
+      };
+
+      # nix cache aws credentials for the nix build daemon
+      "aws_credentials-root" = {
+        symlink = true;
+        path = "/var/root/.aws/credentials";
+        file =  "${secrets}/aws_credentials.age";
+        mode = "600";
       };
 
       "etc_nix_public-key" = {
