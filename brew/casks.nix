@@ -7,7 +7,7 @@ _:
   "ngrok"
   "tableplus"
   "visual-studio-code"
-  "wireshark"
+  "wireshark-app"
   # "zed"
 
   # Communication Tools
@@ -18,7 +18,7 @@ _:
 
   # Network tools
   "expressvpn"
-  "tailscale"
+  "tailscale-app"
 
   # Utility Tools
   "1password"
@@ -27,7 +27,7 @@ _:
   "google-drive"
   "gpg-suite"
   # "fuse-t"
-  "syncthing"
+  "syncthing-app"
   "the-unarchiver"
 
   # Media Tools
