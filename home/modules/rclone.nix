@@ -41,4 +41,30 @@ in {
 
   };
 
+  home.file.".config/rclone/rclone.conf".text = ''
+       [media]
+       type = drive
+       scope = drive
+       auth_owner_only = false
+       team_drive = 0AAbR4e-Vwc1vUk9PVA
+       impersonate = ${config.user.email}
+       service_account_file = ${config.xdg.configHome}/rclone/rclone@io-vandaele-home.json
+
+       [resources]
+       type = drive
+       scope = drive
+       auth_owner_only = false
+       team_drive = 0AF79SYx4cBpyUk9PVA
+       impersonate = ${config.user.email}
+       service_account_file = ${config.xdg.configHome}/rclone/rclone@io-vandaele-home.json
+
+       [vaults]
+       type = drive
+       scope = drive
+       auth_owner_only = false
+       team_drive = 0APvpIONzs0C0Uk9PVA
+       impersonate = ${config.user.email}
+       service_account_file = ${config.xdg.configHome}/rclone/rclone@io-vandaele-home.json
+     '';
+
 }
