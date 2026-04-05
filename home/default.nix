@@ -6,7 +6,7 @@ let
   configHome = config.xdg.configHome;
   dataHome = config.xdg.dataHome;
   stateHome = config.xdg.stateHome;
-  userName = vars.user.name;
+  userName = vars.user.username;
   userEmail = vars.user.email;
 
 in {

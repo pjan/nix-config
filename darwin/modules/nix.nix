@@ -9,7 +9,7 @@ in {
     package = pkgs.nix;
 
     settings = {
-      trusted-users = [ "@admin" "${config.user.name}" ];
+      trusted-users = [ "@admin" "${config.user.username}" ];
       substituters = [
         "https://cache.nixos.org"
         "https://cache.garnix.io"

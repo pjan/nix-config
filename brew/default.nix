@@ -2,10 +2,14 @@
 
 let
 
-in {
+  brewEnabled = vars.brew.enable;
+  cleanup = vars.brew.cleanup;
+  userName = vars.user.username;
+
+in lib.mkIf brewEnabled {
 
   nix-homebrew = {
-    user = vars.user.name;
+    user = userName;
     enable = true;
     taps = {
       "homebrew/homebrew-bundle" = homebrew-bundle;
@@ -21,12 +25,14 @@ in {
 
     enable = true;
 
-    onActivation = {
-      # "zap" removes manually installed brews and casks
-      cleanup = "zap";
-      autoUpdate = true;
-      upgrade = true;
-    };
+    onActivation =
+      {
+        autoUpdate = true;
+        upgrade = true;
+      }
+      // lib.optionalAttrs (cleanup != null) {
+        inherit cleanup;
+      };
 
     # taps = [ "homebrew/services" "macos-fuse-t/homebrew-cask" ];
     brews = pkgs.callPackage ./brews.nix {};

@@ -3,14 +3,15 @@
 let
 
   homeDirectory = config.home.homeDirectory;
-  userName = vars.user.name;
+  userName = vars.user.username;
   userEmail = vars.user.email;
+  computerName = vars.networking.computerName;
 
 in {
 
-  user.name = userName;
+  user.username = userName;
   user.email = userEmail;
-  networking.computerName = vars.hostname;
+  networking.computerName = computerName;
 
   users.users.${userName} = {
     name = userName;

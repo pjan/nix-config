@@ -19,50 +19,50 @@
 
   inputs = {
     nixpkgs = {
-      url = github:nixos/nixpkgs/nixos-unstable;
+      url = "github:nixos/nixpkgs/nixos-unstable";
     };
     systems = {
-      url = github:nix-systems/aarch64-darwin;
+      url = "github:nix-systems/aarch64-darwin";
     };
     home-manager = {
-      url = github:nix-community/home-manager;
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
-      url = github:LnL7/nix-darwin/master;
+      url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-homebrew = {
-      url = github:zhaofengli-wip/nix-homebrew;
+      url = "github:zhaofengli-wip/nix-homebrew";
     };
     agenix = {
-      url = github:ryantm/agenix;
+      url = "github:ryantm/agenix";
     };
     homebrew-bundle = {
-      url = github:homebrew/homebrew-bundle;
+      url = "github:homebrew/homebrew-bundle";
       flake = false;
     };
     homebrew-core = {
-      url = github:homebrew/homebrew-core;
+      url = "github:homebrew/homebrew-core";
       flake = false;
     };
     homebrew-cask = {
-      url = github:homebrew/homebrew-cask;
+      url = "github:homebrew/homebrew-cask";
       flake = false;
     };
     homebrew-subtlesoft = {
-      url = github:nicowald/homebrew-subtlesoft;
+      url = "github:nicowald/homebrew-subtlesoft";
       flake = false;
     };
     flake-schemas = {
-      url = github:DeterminateSystems/flake-schemas;
+      url = "github:DeterminateSystems/flake-schemas";
     };
     flake-utils = {
-      url = github:numtide/flake-utils;
+      url = "github:numtide/flake-utils";
       inputs.systems.follows = "systems";
     };
     secrets = {
-      url = git+ssh://git@github.com/pjan/nix-secrets.git;
+      url = "git+ssh://git@github.com/pjan/nix-secrets.git";
       flake = false;
     };
     # flake imports

@@ -6,7 +6,7 @@ let
 
   cfg = config.home;
 
-  defaultHome = "/Users/${config.user.name}";
+  defaultHome = "/Users/${config.user.username}";
 
 in {
 

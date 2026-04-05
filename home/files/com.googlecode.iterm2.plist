@@ -1547,7 +1547,7 @@
 			<key>Window Type</key>
 			<integer>12</integer>
 			<key>Working Directory</key>
-			<string>/Users/pjan</string>
+			<string>@HOME_DIRECTORY@</string>
 		</dict>
 	</array>
 	<key>PointerActions</key>

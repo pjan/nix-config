@@ -10,11 +10,20 @@ in {
 
   options.user = {
 
-    name = mkOption {
+    username = mkOption {
       type = types.str;
       example = "jane.doe";
       description = ''
         The user's username.
+      '';
+    };
+
+    fullName = mkOption {
+      type = types.str;
+      default = "";
+      example = "Jane Doe";
+      description = ''
+        The user's full display name.
       '';
     };
 
@@ -32,7 +41,7 @@ in {
   config = {
     assertions = [
       {
-        assertion = config.user.name != "";
+        assertion = config.user.username != "";
         message = "User has not been configured";
       }
     ];

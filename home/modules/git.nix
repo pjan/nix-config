@@ -1,6 +1,9 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, vars, ... }:
 
 let
+
+  gitName = vars.user.gitName;
+  gitEmail = vars.user.email;
 
 in {
 
@@ -9,8 +12,8 @@ in {
 
     settings = {
       user = {
-        name = "${config.user.name}";
-        email = "${config.user.email}";
+        name = "${gitName}";
+        email = "${gitEmail}";
       };
 
       # TODO: fix below
