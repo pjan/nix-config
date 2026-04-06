@@ -32,6 +32,10 @@
     nix-homebrew = {
       url = "github:zhaofengli-wip/nix-homebrew";
     };
+    nix-claude-code = {
+      url = "github:ryoppippi/nix-claude-code";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -67,7 +71,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, darwin, nix-homebrew, agenix, homebrew-bundle, homebrew-core, homebrew-cask, homebrew-subtlesoft, secrets, beatport-dl, riptide } @inputs:
+  outputs = { self, nixpkgs, home-manager, darwin, nix-homebrew, agenix, homebrew-bundle, homebrew-core, homebrew-cask, homebrew-subtlesoft, secrets, beatport-dl, riptide, nix-claude-code } @inputs:
     let
 
       vars = import ./config.nix;
@@ -85,6 +89,7 @@
                     (attrNames (readDir path)));
           flakeOverlays = [
             beatport-dl.overlays."${system}".default
+            nix-claude-code.overlays.default
           ];
         in
           importOverlays ++ flakeOverlays;
