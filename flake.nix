@@ -21,9 +21,6 @@
     nixpkgs = {
       url = "github:nixos/nixpkgs/nixos-unstable";
     };
-    systems = {
-      url = "github:nix-systems/aarch64-darwin";
-    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -34,9 +31,11 @@
     };
     nix-homebrew = {
       url = "github:zhaofengli-wip/nix-homebrew";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     agenix = {
       url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     homebrew-bundle = {
       url = "github:homebrew/homebrew-bundle";
@@ -54,13 +53,6 @@
       url = "github:nicowald/homebrew-subtlesoft";
       flake = false;
     };
-    flake-schemas = {
-      url = "github:DeterminateSystems/flake-schemas";
-    };
-    flake-utils = {
-      url = "github:numtide/flake-utils";
-      inputs.systems.follows = "systems";
-    };
     secrets = {
       url = "git+ssh://git@github.com/pjan/nix-secrets.git";
       flake = false;
@@ -76,7 +68,7 @@
     };
   };
 
-  outputs = { self, systems, nixpkgs, home-manager, darwin, nix-homebrew, agenix, homebrew-bundle, homebrew-core, homebrew-cask, homebrew-subtlesoft, flake-schemas, flake-utils, secrets, beatport-dl, riptide } @inputs:
+  outputs = { self, nixpkgs, home-manager, darwin, nix-homebrew, agenix, homebrew-bundle, homebrew-core, homebrew-cask, homebrew-subtlesoft, secrets, beatport-dl, riptide } @inputs:
     let
 
       vars = import ./config.nix;
@@ -132,7 +124,7 @@
       darwinConfigurations.${system} =
         darwin.lib.darwinSystem {
           inherit system;
-          specialArgs = { inherit inputs overlays vars; } // inputs;
+          specialArgs = { inherit inputs overlays vars; secrets = inputs.secrets; };
           modules = [
             home-manager.darwinModules.home-manager
             {
