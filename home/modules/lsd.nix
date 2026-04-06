@@ -1,10 +1,6 @@
-{ config, lib, pkgs, ... }:
+{ ... }:
 
-with config;
-
-let
-
-in {
+{
 
   programs.lsd = {
     enable = true;

@@ -1,25 +1,17 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, lib, ... }:
 
 let
-
-  cfg = config.home;
+  inherit (lib) mkOption mkDefault types;
 
   defaultHome = "/Users/${config.user.username}";
-
 in {
 
-  options = {
+  options.home = {
 
-    home = {
-
-      homeDirectory = mkOption {
-        type = types.path;
-        example = "/home/jane.doe";
-        description = "The user's home directory. Must be an absolute path.";
-      };
-
+    homeDirectory = mkOption {
+      type = types.path;
+      example = "/home/jane.doe";
+      description = "The user's home directory. Must be an absolute path.";
     };
 
   };
@@ -33,7 +25,6 @@ in {
     ];
 
     home.homeDirectory = mkDefault defaultHome;
-
   };
 
 }

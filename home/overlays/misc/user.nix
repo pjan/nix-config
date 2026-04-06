@@ -1,11 +1,7 @@
-{ config, lib, pkgs, ... }:
-
-with lib;
+{ config, lib, ... }:
 
 let
-
-  cfg = config.user;
-
+  inherit (lib) mkOption types;
 in {
 
   options.user = {
@@ -34,7 +30,6 @@ in {
         The user's email.
       '';
     };
-
 
   };
 

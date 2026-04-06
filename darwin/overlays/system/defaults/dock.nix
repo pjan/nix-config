@@ -1,12 +1,12 @@
 { config, pkgs, lib, ... }:
 
-with lib;
-
 let
+
+  inherit (lib) mkOption mkIf hasSuffix concatMapStrings types;
 
   cfg = config.system.defaults.dock.apps;
 
-  inherit (pkgs) stdenv dockutil killall;
+  inherit (pkgs) dockutil killall;
 
 in {
 
@@ -17,24 +17,23 @@ in {
       example = false;
     };
 
-    system.defaults.dock.apps.entries = mkOption
-      {
-        description = "Entries on the Dock";
-        type = with types; listOf (submodule {
-          options = {
-            path = lib.mkOption { type = str; };
-            section = lib.mkOption {
-              type = str;
-              default = "apps";
-            };
-            options = lib.mkOption {
-              type = str;
-              default = "";
-            };
+    system.defaults.dock.apps.entries = mkOption {
+      description = "Entries on the Dock";
+      type = types.listOf (types.submodule {
+        options = {
+          path = mkOption { type = types.str; };
+          section = mkOption {
+            type = types.str;
+            default = "apps";
           };
-        });
-        readOnly = true;
-      };
+          options = mkOption {
+            type = types.str;
+            default = "";
+          };
+        };
+      });
+      readOnly = true;
+    };
   };
 
   config =

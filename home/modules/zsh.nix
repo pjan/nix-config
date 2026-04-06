@@ -1,8 +1,6 @@
-{config, lib, pkgs, ...}:
+{ config, lib, pkgs, ... }:
 
-let
-
-in {
+{
 
   programs.zsh = {
 
@@ -98,8 +96,8 @@ in {
 
       # Make directory and cd into it
       _mkd(){
-        ${pkgs.coreutils}/bin/mkdir -p $1
-        cd $1
+        ${pkgs.coreutils}/bin/mkdir -p "$1"
+        cd "$1"
       }
     '';
   };

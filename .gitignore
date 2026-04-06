@@ -2,6 +2,8 @@
 *.swp
 result
 .DS_Store
+.direnv/
+*.age
 _
 .claude
 docs/superpowers

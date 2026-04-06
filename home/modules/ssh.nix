@@ -1,10 +1,6 @@
-{ config, lib, pkgs, ... }:
+{ config, ... }:
 
-with config;
-
-let
-
-in {
+{
 
   programs.ssh = {
     enable = true;
@@ -23,7 +19,5 @@ in {
     };
 
   };
-
-
 
 }

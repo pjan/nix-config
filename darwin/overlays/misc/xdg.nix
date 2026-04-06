@@ -1,16 +1,12 @@
-{ config, lib, options, pkgs, ... }:
-
-with lib;
+{ config, lib, ... }:
 
 let
-
-  cfg = config.xdg;
+  inherit (lib) mkOption mkDefault types;
 
   defaultCacheHome = "${config.home.homeDirectory}/.cache";
   defaultConfigHome = "${config.home.homeDirectory}/.config";
   defaultDataHome = "${config.home.homeDirectory}/.local/share";
   defaultStateHome = "${config.home.homeDirectory}/.local/state";
-
 in {
 
   options.xdg = {
@@ -50,12 +46,10 @@ in {
   };
 
   config = {
-
     xdg.cacheHome = mkDefault defaultCacheHome;
     xdg.configHome = mkDefault defaultConfigHome;
     xdg.dataHome = mkDefault defaultDataHome;
     xdg.stateHome = mkDefault defaultStateHome;
-
   };
 
 }

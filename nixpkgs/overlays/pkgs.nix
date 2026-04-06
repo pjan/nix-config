@@ -1,7 +1,0 @@
-self: super:
-
-rec {
-
-  # tools
-
-}
