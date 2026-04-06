@@ -21,6 +21,9 @@
     nixpkgs = {
       url = "github:nixos/nixpkgs/nixos-unstable";
     };
+    systems = {
+      url = "github:nix-systems/default";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -39,6 +42,9 @@
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.darwin.follows = "darwin";
+      inputs.home-manager.follows = "home-manager";
+      inputs.systems.follows = "systems";
     };
     homebrew-bundle = {
       url = "github:homebrew/homebrew-bundle";
@@ -64,14 +70,16 @@
     beatport-dl = {
       url = "github:pjan/beatport-dl";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.inputs.systems.follows = "systems";
     };
     riptide = {
       url = "github:pjan/riptide";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.systems.follows = "systems";
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, darwin, nix-homebrew, agenix, homebrew-bundle, homebrew-core, homebrew-cask, homebrew-subtlesoft, secrets, beatport-dl, riptide, nix-claude-code } @inputs:
+  outputs = { self, nixpkgs, systems, home-manager, darwin, nix-homebrew, agenix, homebrew-bundle, homebrew-core, homebrew-cask, homebrew-subtlesoft, secrets, beatport-dl, riptide, nix-claude-code } @inputs:
     let
 
       vars = import ./config.nix;
