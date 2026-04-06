@@ -23,7 +23,7 @@ for arg in "$@"; do
 done
 
 echo "${YELLOW}Starting build...${NC}"
-nix "${nix_args[@]}" build ".#${FLAKE_SYSTEM}" "${forward_args[@]}"
+nix "${nix_args[@]}" build "path:.#${FLAKE_SYSTEM}" "${forward_args[@]}"
 
 echo "${YELLOW}Switching to new generation...${NC}"
 if [[ -r "${SSL_CERT_FILE_PATH}" ]]; then
@@ -31,9 +31,9 @@ if [[ -r "${SSL_CERT_FILE_PATH}" ]]; then
     NIX_SSL_CERT_FILE="${SSL_CERT_FILE_PATH}" \
     SSL_CERT_FILE="${SSL_CERT_FILE_PATH}" \
     NIX_CONFIG="ssl-cert-file = ${SSL_CERT_FILE_PATH}" \
-    ./result/sw/bin/darwin-rebuild switch --option ssl-cert-file "${SSL_CERT_FILE_PATH}" --flake ".#${SYSTEM_TYPE}" "${forward_args[@]}"
+    ./result/sw/bin/darwin-rebuild switch --option ssl-cert-file "${SSL_CERT_FILE_PATH}" --flake "path:.#${SYSTEM_TYPE}" "${forward_args[@]}"
 else
-  sudo ./result/sw/bin/darwin-rebuild switch --flake ".#${SYSTEM_TYPE}" "${forward_args[@]}"
+  sudo ./result/sw/bin/darwin-rebuild switch --flake "path:.#${SYSTEM_TYPE}" "${forward_args[@]}"
 fi
 
 if [[ "$keep_result" == true ]]; then

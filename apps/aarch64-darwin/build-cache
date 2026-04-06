@@ -13,7 +13,7 @@ export NIXPKGS_ALLOW_UNFREE=1
 nix_args=(--extra-experimental-features 'nix-command flakes')
 
 echo "${YELLOW}Starting build...${NC}"
-nix "${nix_args[@]}" build ".#${FLAKE_SYSTEM}" "$@"
+nix "${nix_args[@]}" build "path:.#${FLAKE_SYSTEM}" "$@"
 
 echo "${YELLOW}Storing result in remote cache...${NC}"
 nix "${nix_args[@]}" store sign --recursive -k /etc/nix/secret-key "$(readlink ./result)"

@@ -23,7 +23,7 @@ for arg in "$@"; do
 done
 
 echo "${YELLOW}Starting build...${NC}"
-nix "${nix_args[@]}" build ".#${FLAKE_SYSTEM}" "${forward_args[@]}"
+nix "${nix_args[@]}" build "path:.#${FLAKE_SYSTEM}" "${forward_args[@]}"
 
 if [[ "$keep_result" == true ]]; then
   echo "${YELLOW}Keeping result symlink...${NC}"
