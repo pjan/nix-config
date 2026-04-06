@@ -8,9 +8,9 @@ pkgs.buildEnv {
     jq
     jqp
     nodejs
-    nodePackages.eslint
-    # nodePackages.csslint
-    nodePackages.prettier
+    eslint
+    # csslint
+    prettier
     yq
   ];
 }
