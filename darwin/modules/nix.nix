@@ -1,7 +1,7 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, vars, ... }:
 
 let
-
+  sslCertFile = vars.nix.sslCertFile;
 in {
 
   nix = {
@@ -22,6 +22,8 @@ in {
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "io-vandaele-nix-cache:O9fdSbSnySVmQFa353NjmU/lP5GifyVfOmDM2XhBs8Q="
       ];
+    } // lib.optionalAttrs (sslCertFile != null) {
+      ssl-cert-file = sslCertFile;
     };
 
     gc = {

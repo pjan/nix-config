@@ -25,13 +25,13 @@ with pkgs; [
 
   # Text and terminal utilities
   hunspell
-  jetbrains-mono
+  # jetbrains-mono
   jq
   yazi
 
   # Python packages
   poetry
   python3
-  uv
-  virtualenv
+  # uv
+  # virtualenv
 ]

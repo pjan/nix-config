@@ -7,14 +7,17 @@ let
   dataHome = config.xdg.dataHome;
   stateHome = config.xdg.stateHome;
   userName = vars.user.username;
+  userFullName = vars.user.fullName;
   userEmail = vars.user.email;
 
 in {
 
   home-manager.useGlobalPkgs = true;
+  home-manager.extraSpecialArgs = { inherit inputs vars; };
   home-manager.users.${userName} = { ... }:{
 
-    user.name = userName;
+    user.username = userName;
+    user.fullName = userFullName;
     user.email = userEmail;
 
     xdg.cacheHome = cacheHome;

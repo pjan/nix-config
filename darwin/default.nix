@@ -4,12 +4,14 @@ let
 
   homeDirectory = config.home.homeDirectory;
   userName = vars.user.username;
+  userFullName = vars.user.fullName;
   userEmail = vars.user.email;
   computerName = vars.networking.computerName;
 
 in {
 
   user.username = userName;
+  user.fullName = userFullName;
   user.email = userEmail;
   networking.computerName = computerName;
 

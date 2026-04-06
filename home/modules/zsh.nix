@@ -55,7 +55,8 @@ in {
       speedtest = "${pkgs.speedtest-cli}/bin/speedtest";
 
       # nix shell
-      shell = "_shell";
+      shell = "_ns";
+      ns = "_ns";
 
       # make a directory and cd into it
       mkd = "_mkd";
@@ -80,8 +81,19 @@ in {
       export VISUAL="vi"
 
       # nix shortcuts
-      _shell() {
-          nix-shell '<nixpkgs>' -A "$1"
+      _ns() {
+        if [ "$#" -eq 0 ]; then
+          echo "usage: ns <package> [package ...]"
+          return 1
+        fi
+
+        local -a nix_args
+        nix_args=()
+        if [ -r /etc/nix/ca-bundle.crt ]; then
+          nix_args+=(--option ssl-cert-file /etc/nix/ca-bundle.crt)
+        fi
+
+        NIX_PATH="nixpkgs=flake:nixpkgs" nix-shell "''${nix_args[@]}" -p "$@" --command 'exec zsh -l'
       }
 
       # Make directory and cd into it
