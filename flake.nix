@@ -31,7 +31,6 @@
     };
     nix-homebrew = {
       url = "github:zhaofengli-wip/nix-homebrew";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     agenix = {
       url = "github:ryantm/agenix";
@@ -108,6 +107,7 @@
           echo "Running ${scriptName} for ${system}"
           exec ${self}/apps/${system}/${scriptName} "$@"
         '')}/bin/${scriptName}";
+        meta.description = "nix-darwin ${scriptName} for ${system}";
       };
 
     in {

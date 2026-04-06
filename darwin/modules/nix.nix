@@ -6,9 +6,8 @@ in {
 
   nix = {
 
-    package = pkgs.nix;
-
     settings = {
+      experimental-features = [ "nix-command" "flakes" ];
       trusted-users = [ "@admin" "${config.user.username}" ];
       substituters = [
         "https://cache.nixos.org"
@@ -32,9 +31,6 @@ in {
       options = "--delete-older-than 30d";
     };
 
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
   };
 
 }
