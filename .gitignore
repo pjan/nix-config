@@ -2,3 +2,6 @@
 *.swp
 result
 .DS_Store
+_
+.claude
+docs/superpowers

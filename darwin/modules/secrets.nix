@@ -13,7 +13,7 @@
         symlink = true;
         path = "${config.xdg.configHome}/aws/credentials";
         file =  "${secrets}/aws_credentials.age";
-        mode = "644";
+        mode = "600";
         owner = "${config.user.username}";
         group = "staff";
       };
@@ -39,7 +39,7 @@
         symlink = true;
         path = "/etc/nix/secret-key";
         file =  "${secrets}/etc_nix_secret-key.age";
-        mode = "644";
+        mode = "600";
         owner = "${config.user.username}";
         group = "staff";
       };

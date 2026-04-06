@@ -11,7 +11,7 @@ in {
     enableDefaultConfig = false;
 
     matchBlocks."*" = {
-      forwardAgent = true;
+      forwardAgent = false;
       compression = true;
       serverAliveInterval = 60;
       serverAliveCountMax = 3;

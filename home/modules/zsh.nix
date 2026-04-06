@@ -75,7 +75,7 @@ in {
       # Define variables for directories
       export PATH=$HOME/.local/share/bin:$PATH
 
-      # Emacs is my editor
+      # vi is my editor
       export ALTERNATE_EDITOR=""
       export EDITOR="vi"
       export VISUAL="vi"

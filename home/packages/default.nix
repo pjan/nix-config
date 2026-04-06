@@ -23,10 +23,13 @@ with pkgs; [
   age-plugin-yubikey
   libfido2
 
+  # ai
+  claude-code
+
   # Text and terminal utilities
   hunspell
   # jetbrains-mono
-  jq
+  # jq
   yazi
 
   # Python packages
