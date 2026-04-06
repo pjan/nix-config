@@ -48,7 +48,7 @@
         symlink = true;
         path = "${config.xdg.configHome}/rclone/rclone@io-vandaele-home.json";
         file =  "${secrets}/rclone@io-vandaele-home.age";
-        mode = "644";
+        mode = "600";
         owner = "${config.user.username}";
         group = "staff";
       };
