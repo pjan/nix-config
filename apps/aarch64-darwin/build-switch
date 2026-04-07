@@ -22,11 +22,8 @@ for arg in "$@"; do
   fi
 done
 
-# Skip build if result already exists (e.g. from a prior nix run .#build --keep-result)
-if [[ ! -L ./result ]]; then
-  echo "${YELLOW}Starting build...${NC}"
-  nix "${nix_args[@]}" build "path:.#${FLAKE_SYSTEM}" "${forward_args[@]}"
-fi
+echo "${YELLOW}Starting build...${NC}"
+nix "${nix_args[@]}" build "path:.#${FLAKE_SYSTEM}" "${forward_args[@]}"
 
 RESULT="$(readlink -f ./result)"
 

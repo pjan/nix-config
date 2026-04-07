@@ -13,7 +13,7 @@
         symlink = true;
         path = "${config.xdg.configHome}/aws/credentials";
         file =  "${secrets}/aws_credentials.age";
-        mode = "600";
+        mode = "644";
         owner = "${config.user.username}";
         group = "staff";
       };

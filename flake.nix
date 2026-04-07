@@ -131,7 +131,9 @@
         "build" = mkApp "build" ;
         "build-cache" = mkApp "build-cache" ;
         "build-switch" = mkApp "build-switch" ;
+        "cache" = mkApp "cache" ;
         "rollback" = mkApp "rollback" ;
+        "switch" = mkApp "switch" ;
       };
 
       darwinConfigurations.${system} =
