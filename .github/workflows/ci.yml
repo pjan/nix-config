@@ -19,6 +19,9 @@ jobs:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
+      - name: Apply CI config stub
+        run: cp ci/config-stub.nix config.nix
+
       - name: Build darwin configuration
         run: |
           nix build '.#darwinConfigurations.aarch64-darwin.system' \
