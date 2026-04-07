@@ -13,7 +13,6 @@ jobs:
     runs-on: macos-14
     env:
       NIXPKGS_ALLOW_UNFREE: "1"
-      AWS_SHARED_CREDENTIALS_FILE: "${{ runner.temp }}/gcs-credentials"
       AWS_REQUEST_CHECKSUM_CALCULATION: when_required
       AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
     steps:
@@ -41,6 +40,7 @@ jobs:
         run: |
           printf '[gcp]\naws_access_key_id = %s\naws_secret_access_key = %s\n' \
             "$GCS_KEY_ID" "$GCS_SECRET" > "$RUNNER_TEMP/gcs-credentials"
+          echo "AWS_SHARED_CREDENTIALS_FILE=$RUNNER_TEMP/gcs-credentials" >> "$GITHUB_ENV"
 
       - name: Build darwin configuration
         run: |
@@ -64,4 +64,5 @@ jobs:
         if: always()
         run: |
           [ -L ./result ] && unlink ./result || true
-          rm -f "$RUNNER_TEMP/nix-signing-key" "$RUNNER_TEMP/gcs-credentials"
+          rm -f "$RUNNER_TEMP/nix-signing-key"
+          rm -f "${AWS_SHARED_CREDENTIALS_FILE:-$RUNNER_TEMP/gcs-credentials}"
