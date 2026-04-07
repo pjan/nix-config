@@ -45,8 +45,7 @@ jobs:
       - name: Build darwin configuration
         run: |
           nix build '.#darwinConfigurations.aarch64-darwin.system' \
-            --override-input secrets 'path:./ci/secrets-stub' \
-            --keep-result
+            --override-input secrets 'path:./ci/secrets-stub'
 
       - name: Sign store paths
         run: |
