@@ -7,6 +7,7 @@ pkgs.buildEnv {
     colordiff
     diffstat
     diffutils
+    gh
     ghi
     gist
     git-cliff

@@ -269,6 +269,8 @@ in {
 
     lfs.enable = true;
 
+    signing.format = null;
+
   };
 
 }
