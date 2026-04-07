@@ -1,0 +1,75 @@
+name: "Update Inputs"
+
+on:
+  schedule:
+    - cron: "0 23 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          install_url: https://releases.nixos.org/nix/nix-2.24.11/install
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update flake inputs (excluding homebrew taps)
+        run: |
+          nix flake update \
+            nixpkgs \
+            home-manager \
+            darwin \
+            agenix \
+            nix-homebrew \
+            nix-claude-code \
+            beatport-dl \
+            riptide \
+            systems
+
+      - name: Apply CI config stub
+        run: cp ci/config-stub.nix config.nix
+
+      - name: Build darwin configuration with updated inputs
+        run: |
+          nix build '.#darwinConfigurations.aarch64-darwin.system' \
+            --override-input secrets 'path:./ci/secrets-stub' \
+            --dry-run
+
+      - name: Capture lock diff
+        if: success()
+        run: |
+          {
+            echo "LOCK_DIFF<<EOF"
+            git diff flake.lock
+            echo "EOF"
+          } >> "$GITHUB_ENV"
+
+      - name: Open pull request if inputs changed
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: update/flake-lock
+          commit-message: "chore(flake): update inputs"
+          title: "chore(flake): update inputs"
+          body: |
+            Automated weekly update of flake inputs (homebrew taps excluded).
+
+            <details>
+            <summary>flake.lock diff</summary>
+
+            ```
+            ${{ env.LOCK_DIFF }}
+            ```
+
+            </details>
+          labels: "dependencies"
+          delete-branch: true
