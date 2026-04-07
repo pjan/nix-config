@@ -22,18 +22,26 @@ for arg in "$@"; do
   fi
 done
 
-echo "${YELLOW}Starting build...${NC}"
-nix "${nix_args[@]}" build "path:.#${FLAKE_SYSTEM}" "${forward_args[@]}"
+# Skip build if result already exists (e.g. from a prior nix run .#build --keep-result)
+if [[ ! -L ./result ]]; then
+  echo "${YELLOW}Starting build...${NC}"
+  nix "${nix_args[@]}" build "path:.#${FLAKE_SYSTEM}" "${forward_args[@]}"
+fi
+
+RESULT="$(readlink -f ./result)"
 
 echo "${YELLOW}Switching to new generation...${NC}"
+# Activate directly from the pre-built result, bypassing flake re-evaluation.
+# darwin-rebuild switch does exactly: nix-env --set the profile, then run activate.
+sudo nix-env --profile /nix/var/nix/profiles/system --set "$RESULT"
 if [[ -r "${SSL_CERT_FILE_PATH}" ]]; then
   sudo env \
     NIX_SSL_CERT_FILE="${SSL_CERT_FILE_PATH}" \
     SSL_CERT_FILE="${SSL_CERT_FILE_PATH}" \
     NIX_CONFIG="ssl-cert-file = ${SSL_CERT_FILE_PATH}" \
-    ./result/sw/bin/darwin-rebuild switch --option ssl-cert-file "${SSL_CERT_FILE_PATH}" --flake "path:.#${SYSTEM_TYPE}" "${forward_args[@]}"
+    "$RESULT/activate"
 else
-  sudo ./result/sw/bin/darwin-rebuild switch --flake "path:.#${SYSTEM_TYPE}" "${forward_args[@]}"
+  sudo "$RESULT/activate"
 fi
 
 if [[ "$keep_result" == true ]]; then
