@@ -32,6 +32,7 @@ in {
         entries = [
           { path = "/Applications/iTerm.app/"; }
           { path = "/Applications/TIDAL.app/"; }
+          { path = "/Applications/Google Chrome.app/"; }
           {
             path = "${config.home.homeDirectory}/Downloads";
             section = "others";

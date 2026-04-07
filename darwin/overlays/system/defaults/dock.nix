@@ -1,4 +1,5 @@
 { config, pkgs, lib, ... }:
+# Based on: https://gist.github.com/antifuchs/10138c4d838a63c0a05e725ccd7bccdd
 
 let
 
@@ -6,7 +7,7 @@ let
 
   cfg = config.system.defaults.dock.apps;
 
-  inherit (pkgs) dockutil killall;
+  inherit (pkgs) dockutil;
 
 in {
 
@@ -14,7 +15,6 @@ in {
     system.defaults.dock.apps.enable = mkOption {
       description = "Enable app management for dock";
       default = false;
-      example = false;
     };
 
     system.defaults.dock.apps.entries = mkOption {
@@ -40,6 +40,7 @@ in {
     mkIf cfg.enable
       (
         let
+          username = config.user.username;
           normalize = path: if hasSuffix ".app" path then path + "/" else path;
           entryURI = path: "file://" + (builtins.replaceStrings
             [" "   "!"   "\""  "#"   "$"   "%"   "&"   "'"   "("   ")"]
@@ -50,21 +51,23 @@ in {
             (entry: "${entryURI entry.path}\n")
             cfg.entries;
           createEntries = concatMapStrings
-            (entry: "${dockutil}/bin/dockutil --allhomes --no-restart --add '${entry.path}' --section ${entry.section} ${entry.options} ${config.home.homeDirectory}\n")
+            (entry: "${dockutil}/bin/dockutil --no-restart --add '${entry.path}' --section ${entry.section} ${entry.options}\n")
             cfg.entries;
         in
         {
           system.activationScripts.postActivation.text = ''
-            echo >&2 "Setting up the Dock..."
-            haveURIs="$(${dockutil}/bin/dockutil --list --allhomes | ${pkgs.coreutils}/bin/cut -f2)"
+            echo >&2 "Setting up the Dock for ${username}..."
+            sudo -u ${username} ${pkgs.zsh}/bin/zsh <<'USERBLOCK'
+            haveURIs="$(${dockutil}/bin/dockutil --list | ${pkgs.coreutils}/bin/cut -f2)"
             if ! diff -wu <(echo -n "$haveURIs") <(echo -n '${wantURIs}') >&2 ; then
               echo >&2 "Resetting Dock."
-              ${dockutil}/bin/dockutil --allhomes --no-restart --remove all
+              ${dockutil}/bin/dockutil --no-restart --remove all
               ${createEntries}
-              ${killall}/bin/killall Dock
+              killall Dock
             else
               echo >&2 "Dock setup complete."
             fi
+            USERBLOCK
           '';
         }
       );
