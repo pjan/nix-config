@@ -18,6 +18,17 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Free disk space
+        run: |
+          # macOS runners ship with Xcode simulators and other tooling we don't need.
+          # Removing them frees 20-40 GB needed for compiling large packages (e.g. deno).
+          sudo rm -rf /Library/Developer/CoreSimulator/Profiles/Runtimes/ || true
+          sudo rm -rf ~/Library/Developer/CoreSimulator/ || true
+          sudo rm -rf /Applications/Xcode_*.app || true
+          sudo rm -rf /opt/homebrew/share/dotnet/ || true
+          sudo rm -rf /opt/homebrew/opt/mono/ || true
+          df -h /
+
       - uses: cachix/install-nix-action@v31
         with:
           install_url: https://releases.nixos.org/nix/nix-2.24.11/install
