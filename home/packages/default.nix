@@ -24,6 +24,7 @@ with pkgs; [
   libfido2
 
   # ai
+  bmad-method
   claude-code
 
   # Text and terminal utilities
