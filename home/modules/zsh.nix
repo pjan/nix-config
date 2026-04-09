@@ -99,6 +99,9 @@
         ${pkgs.coreutils}/bin/mkdir -p "$1"
         cd "$1"
       }
+
+      # Source local machine-specific config if present
+      [[ -f "$HOME/.zshrc" ]] && source "$HOME/.zshrc"
     '';
   };
 
