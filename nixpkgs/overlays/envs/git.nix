@@ -9,6 +9,7 @@ pkgs.buildEnv {
     diffutils
     gh
     ghi
+    git-wt
     gist
     git-cliff
     git-crypt
