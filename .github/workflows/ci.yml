@@ -19,6 +19,11 @@ jobs:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
+      - uses: nix-community/cache-nix-action@v6
+        with:
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', 'flake.lock') }}
+          restore-keys: nix-${{ runner.os }}-
+
       - name: Apply CI config stub
         run: cp ci/config-stub.nix config.nix
 

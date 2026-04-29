@@ -18,6 +18,10 @@
   };
 
   inputs = {
+    flake-utils = {
+      url = "github:numtide/flake-utils";
+      inputs.systems.follows = "systems";
+    };
     nixpkgs = {
       url = "github:nixos/nixpkgs/nixos-unstable";
     };
@@ -38,6 +42,18 @@
     nix-claude-code = {
       url = "github:ryoppippi/nix-claude-code";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-pkgs = {
+      url = "github:pjan/nix-pkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.flake-utils.inputs.systems.follows = "systems";
+    };
+    codex-cli-nix = {
+      url = "github:sadjow/codex-cli-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+      inputs.flake-utils.inputs.systems.follows = "systems";
     };
     agenix = {
       url = "github:ryantm/agenix";
@@ -70,6 +86,7 @@
     beatport-dl = {
       url = "github:pjan/beatport-dl";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
       inputs.flake-utils.inputs.systems.follows = "systems";
     };
     riptide = {
@@ -79,7 +96,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, systems, home-manager, darwin, nix-homebrew, agenix, homebrew-bundle, homebrew-core, homebrew-cask, homebrew-subtlesoft, secrets, beatport-dl, riptide, nix-claude-code } @inputs:
+  outputs = { self, flake-utils, nixpkgs, systems, home-manager, darwin, nix-homebrew, agenix, homebrew-bundle, homebrew-core, homebrew-cask, homebrew-subtlesoft, secrets, beatport-dl, riptide, nix-claude-code, codex-cli-nix, nix-pkgs } @inputs:
     let
 
       vars = import ./config.nix;
@@ -98,6 +115,8 @@
           flakeOverlays = [
             beatport-dl.overlays."${system}".default
             nix-claude-code.overlays.default
+            codex-cli-nix.overlays.default
+            nix-pkgs.overlays.default
           ];
         in
           importOverlays ++ flakeOverlays;

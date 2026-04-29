@@ -47,7 +47,7 @@
       rmdir = "${pkgs.rmtrash}/bin/rmdirtrash";
 
       # secure remove
-      srm = "${pkgs.srm}/bin/srm -vfr";
+      srm = "${pkgs.thc-secure-delete}/bin/srm -vfr";
 
       # Run a speedtest
       speedtest = "${pkgs.speedtest-cli}/bin/speedtest";

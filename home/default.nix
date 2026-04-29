@@ -29,9 +29,10 @@ in {
     home.enableNixpkgsReleaseCheck = false;
     home.packages = pkgs.callPackage ./packages {};
 
-    imports = [./overlays] ++ lib.filter
-                (n: lib.strings.hasSuffix ".nix" n)
-                (lib.filesystem.listFilesRecursive ./modules);
+    imports = [ ./overlays ]
+      ++ lib.filter (n: lib.strings.hasSuffix ".nix" n)
+           (lib.filesystem.listFilesRecursive ./modules)
+      ++ lib.optional (builtins.pathExists ./overrides.nix) ./overrides.nix;
 
   };
 

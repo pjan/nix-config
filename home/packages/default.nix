@@ -26,6 +26,7 @@ with pkgs; [
   # ai
   bmad-method
   claude-code
+  codex
 
   # Text and terminal utilities
   hunspell
@@ -38,4 +39,6 @@ with pkgs; [
   python3
   # uv
   # virtualenv
+
+  googleworkspace-cli
 ]

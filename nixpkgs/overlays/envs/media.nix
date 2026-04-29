@@ -6,6 +6,5 @@ pkgs.buildEnv {
     beatport-dl
     ffmpeg
     mkvtoolnix
-    tidal-dl
   ];
 }

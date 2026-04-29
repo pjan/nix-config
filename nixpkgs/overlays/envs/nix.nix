@@ -8,7 +8,7 @@ pkgs.buildEnv {
     nix-diff
     nix-index
     nix-info
-    nix-prefetch-scripts
+    # nix-prefetch-scripts
     # nixpkgs-fmt
     # nixfmt
   ];

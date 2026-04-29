@@ -26,8 +26,9 @@ in {
   system.checks.verifyNixPath = false;
   system.primaryUser = userName;
 
-  imports = [ ./overlays ] ++ lib.filter
-              (n: lib.strings.hasSuffix ".nix" n)
-              (lib.filesystem.listFilesRecursive ./modules);
+  imports = [ ./overlays ]
+    ++ lib.filter (n: lib.strings.hasSuffix ".nix" n)
+         (lib.filesystem.listFilesRecursive ./modules)
+    ++ lib.optional (builtins.pathExists ./overrides.nix) ./overrides.nix;
 
 }

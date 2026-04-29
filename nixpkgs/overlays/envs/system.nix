@@ -6,6 +6,7 @@ pkgs.buildEnv {
     aspell
     aspellDicts.en
     aspellDicts.nl
+    ast-grep
     bash-completion
     bashInteractive
     bat              # alternative to cat
@@ -48,9 +49,10 @@ pkgs.buildEnv {
     rmtrash
     scc
     screen
+    sd
     shfmt
     silver-searcher
-    srm
+    thc-secure-delete
     sqlite
     sqlite-analyzer
     sqldiff
