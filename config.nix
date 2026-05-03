@@ -1,15 +1,17 @@
 {
-  user.email = "";
-  user.username = "";
-  user.fullName = "";
-  user.gitName = "";
+  user.email = "ci@example.com";
+  user.username = "ci-user";
+  user.fullName = "CI User";
+  user.gitName = "CI User";
 
-  networking.computerName = "";
-  networking.localHostName = "";
+  networking.computerName = "ci-machine";
+  networking.localHostName = "ci-machine";
   networking.hostName = null;
 
   nix.sslCertFile = null;
 
-  brew.enable = true;
-  brew.cleanup = "zap";
+  brew.enable = false;
+  brew.cleanup = null;
+
+  shell.sessionPath = [];
 }
