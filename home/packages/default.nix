@@ -2,6 +2,7 @@
 
 with pkgs; [
 
+  tools.ai
   tools.dev
   tools.git
   tools.js
@@ -22,11 +23,6 @@ with pkgs; [
   age
   age-plugin-yubikey
   libfido2
-
-  # ai
-  bmad-method
-  claude-code
-  codex
 
   # Text and terminal utilities
   hunspell

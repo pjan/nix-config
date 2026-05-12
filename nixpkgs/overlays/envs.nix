@@ -5,6 +5,7 @@ let
 in {
 
   tools = {
+    ai         = self.callPackage ./envs/ai.nix       { };
     dev        = self.callPackage ./envs/dev.nix      { };
     git        = self.callPackage ./envs/git.nix      { };
     js         = self.callPackage ./envs/js.nix       { };
