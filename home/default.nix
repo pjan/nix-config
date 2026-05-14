@@ -29,6 +29,13 @@ in {
     home.enableNixpkgsReleaseCheck = false;
     home.packages = pkgs.callPackage ./packages {};
 
+    home.sessionVariables = {
+      XDG_CACHE_HOME  = cacheHome;
+      XDG_CONFIG_HOME = configHome;
+      XDG_DATA_HOME   = dataHome;
+      XDG_STATE_HOME  = stateHome;
+    };
+
     imports = [ ./overlays ]
       ++ lib.filter (n: lib.strings.hasSuffix ".nix" n)
            (lib.filesystem.listFilesRecursive ./modules)

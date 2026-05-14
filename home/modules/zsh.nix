@@ -8,12 +8,12 @@
 
     autocd = true;
 
-    sessionVariables = {
-      XDG_CACHE_HOME  = config.xdg.cacheHome;
-      XDG_CONFIG_HOME = config.xdg.configHome;
-      XDG_DATA_HOME   = config.xdg.dataHome;
-      XDG_STATE_HOME  = config.xdg.stateHome;
-    };
+    envExtra = ''
+      export XDG_CACHE_HOME="${config.xdg.cacheHome}"
+      export XDG_CONFIG_HOME="${config.xdg.configHome}"
+      export XDG_DATA_HOME="${config.xdg.dataHome}"
+      export XDG_STATE_HOME="${config.xdg.stateHome}"
+    '';
 
     dotDir = "${config.xdg.configHome}/zsh";
 
