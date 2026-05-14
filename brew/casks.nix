@@ -2,7 +2,6 @@ _:
 
 [
   # Development Tools
-  "docker"
   "insomnia"
   "iterm2"
   "ngrok"

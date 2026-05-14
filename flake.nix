@@ -158,7 +158,11 @@
       darwinConfigurations.${system} =
         darwin.lib.darwinSystem {
           inherit system;
-          specialArgs = { inherit inputs overlays vars; secrets = inputs.secrets; };
+          specialArgs = {
+            inherit inputs overlays vars;
+            inherit (inputs) homebrew-bundle homebrew-core homebrew-cask homebrew-subtlesoft;
+            secrets = inputs.secrets;
+          };
           modules = [
             home-manager.darwinModules.home-manager
             {
