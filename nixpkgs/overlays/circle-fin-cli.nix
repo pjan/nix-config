@@ -1,6 +1,6 @@
 self: super: {
 
-  circle-cli = super.stdenv.mkDerivation rec {
+  circle-cli = super.buildNpmPackage rec {
     pname = "circle-cli";
     version = "0.0.3";
 
@@ -9,18 +9,22 @@ self: super: {
       hash = "sha256-/VkDGEGfwev/yLp5stoSPFjZFXV+TYduVWvQZMExPOg=";
     };
 
-    nativeBuildInputs = [ super.makeWrapper ];
-
-    unpackPhase = ''
-      tar -xzf $src
+    # package-lock.json generated from the tarball's package.json with devDependencies
+    # stripped — they include private @circlefin-scoped packages not on the public registry.
+    postPatch = ''
+      cp ${./circle-fin-cli-lock.json} package-lock.json
+      ${super.jq}/bin/jq 'del(.devDependencies)' package.json > package.json.tmp
+      mv package.json.tmp package.json
     '';
 
-    installPhase = ''
-      mkdir -p $out/lib/circle-fin-cli $out/bin
-      cp package/dist/index.js $out/lib/circle-fin-cli/index.js
-      chmod +x $out/lib/circle-fin-cli/index.js
-      makeWrapper ${super.nodejs}/bin/node $out/bin/circle \
-        --add-flags "$out/lib/circle-fin-cli/index.js"
+    npmDepsHash = "sha256-ToWy0Q5snPWnA5fpRExz/XalzBYYt+d0f5+FY+GdxYk=";
+
+    npmFlags = [ "--omit=dev" "--legacy-peer-deps" ];
+
+    dontNpmBuild = true;
+
+    unpackPhase = ''
+      tar -xzf $src --strip-components=1
     '';
 
     meta = with super.lib; {
