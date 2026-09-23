@@ -221,19 +221,22 @@
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
+        ],
+        "systems": [
+          "systems"
         ]
       },
       "locked": {
-        "lastModified": 1788663712,
-        "narHash": "sha256-wK+yP5oKMJPa4TOwwPl3vPeMgk1FruPvN0TA0lKpGVg=",
-        "owner": "ryoppippi",
-        "repo": "nix-claude-code",
-        "rev": "5ea16210008a108b89166801d86f1b90e2a79b44",
+        "lastModified": 1790096491,
+        "narHash": "sha256-zeY26igEw0G1GnVe1fA8pa/+q7mxanzCUV91GUTedzk=",
+        "owner": "sadjow",
+        "repo": "claude-code-nix",
+        "rev": "7e5f1c52ca206b2a3a535ec0e8f89bd1ae5f1afa",
         "type": "github"
       },
       "original": {
-        "owner": "ryoppippi",
-        "repo": "nix-claude-code",
+        "owner": "sadjow",
+        "repo": "claude-code-nix",
         "type": "github"
       }
     },

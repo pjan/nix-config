@@ -40,8 +40,9 @@
       url = "github:zhaofengli-wip/nix-homebrew";
     };
     nix-claude-code = {
-      url = "github:ryoppippi/nix-claude-code";
+      url = "github:sadjow/claude-code-nix";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.systems.follows = "systems";
     };
     nix-pkgs = {
       url = "github:pjan/nix-pkgs";
