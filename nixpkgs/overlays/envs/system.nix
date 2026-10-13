@@ -51,7 +51,7 @@ pkgs.buildEnv {
     screen
     sd
     shfmt
-    silver-searcher
+    silver-searcher-ng
     thc-secure-delete
     sqlite
     sqlite-analyzer
