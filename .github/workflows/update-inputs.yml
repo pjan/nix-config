@@ -11,9 +11,25 @@ permissions:
 
 jobs:
   update:
-    runs-on: ubuntu-latest
+    # Full build on macOS and push to the GCS cache before opening the PR, so a PR
+    # only exists when the system builds and merging it gives instant cache hits.
+    runs-on: macos-14
+    env:
+      NIXPKGS_ALLOW_UNFREE: "1"
+      AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+      AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
     steps:
       - uses: actions/checkout@v6
+
+      - name: Free disk space
+        run: |
+          # macOS runners ship with Xcode simulators and other tooling we don't need.
+          sudo rm -rf /Library/Developer/CoreSimulator/Profiles/Runtimes/ || true
+          sudo rm -rf ~/Library/Developer/CoreSimulator/ || true
+          sudo rm -rf /Applications/Xcode_*.app || true
+          sudo rm -rf /opt/homebrew/share/dotnet/ || true
+          sudo rm -rf /opt/homebrew/opt/mono/ || true
+          df -h /
 
       - uses: cachix/install-nix-action@v31
         with:
@@ -21,6 +37,8 @@ jobs:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+            extra-substituters = https://ryoppippi.cachix.org s3://io-vandaele-nix-cache?endpoint=https://storage.googleapis.com&profile=gcp
+            extra-trusted-public-keys = ryoppippi.cachix.org-1:b2LbtWNvJeL/qb1B6TYOMK+apaCps4SCbzlPRfSQIms= io-vandaele-nix-cache:O9fdSbSnySVmQFa353NjmU/lP5GifyVfOmDM2XhBs8Q=
 
       - name: Update flake inputs (excluding homebrew taps)
         run: |
@@ -40,14 +58,44 @@ jobs:
       - name: Apply CI config stub
         run: cp ci/config-stub.nix config.nix
 
+      - name: Write nix signing key
+        env:
+          NIX_SIGNING_KEY: ${{ secrets.NIX_SIGNING_KEY }}
+        run: printf '%s' "$NIX_SIGNING_KEY" > "$RUNNER_TEMP/nix-signing-key"
+
+      - name: Write GCS credentials
+        env:
+          GCS_KEY_ID: ${{ secrets.GCS_HMAC_ACCESS_KEY_ID }}
+          GCS_SECRET: ${{ secrets.GCS_HMAC_SECRET_ACCESS_KEY }}
+        run: |
+          printf '[gcp]\naws_access_key_id = %s\naws_secret_access_key = %s\n' \
+            "$GCS_KEY_ID" "$GCS_SECRET" > "$RUNNER_TEMP/gcs-credentials"
+          echo "AWS_SHARED_CREDENTIALS_FILE=$RUNNER_TEMP/gcs-credentials" >> "$GITHUB_ENV"
+          # The nix daemon substitutes as root and does not see the env above.
+          sudo mkdir -p /var/root/.aws
+          sudo install -m 600 "$RUNNER_TEMP/gcs-credentials" /var/root/.aws/credentials
+
       - name: Build darwin configuration with updated inputs
         run: |
+          # --max-jobs 1: parallel builds exhaust runner memory.
           nix build '.#darwinConfigurations.aarch64-darwin.system' \
             --override-input secrets 'path:./ci/secrets-stub' \
-            --dry-run
+            --max-jobs 1 \
+            --print-build-logs
+
+      - name: Sign store paths
+        run: |
+          nix store sign --recursive \
+            -k "$RUNNER_TEMP/nix-signing-key" \
+            "$(readlink ./result)"
+
+      - name: Push to GCS cache
+        run: |
+          nix copy \
+            --to "s3://io-vandaele-nix-cache?endpoint=https://storage.googleapis.com&profile=gcp" \
+            "$(readlink ./result)"
 
       - name: Capture lock diff
-        if: success()
         run: |
           {
             echo "LOCK_DIFF<<EOF"
@@ -66,6 +114,7 @@ jobs:
           title: "chore(flake): update inputs"
           body: |
             Automated weekly update of flake inputs (homebrew taps excluded).
+            Built on macOS and pushed to the GCS cache before this PR was opened.
 
             <details>
             <summary>flake.lock diff</summary>
@@ -77,3 +126,11 @@ jobs:
             </details>
           labels: "dependencies"
           delete-branch: true
+
+      - name: Cleanup
+        if: always()
+        run: |
+          [ -L ./result ] && unlink ./result || true
+          rm -f "$RUNNER_TEMP/nix-signing-key"
+          rm -f "${AWS_SHARED_CREDENTIALS_FILE:-$RUNNER_TEMP/gcs-credentials}"
+          sudo rm -f /var/root/.aws/credentials
