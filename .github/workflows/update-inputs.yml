@@ -59,6 +59,8 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          # Only the lock; config.nix is overwritten with the CI stub above.
+          add-paths: flake.lock
           branch: update/flake-lock
           commit-message: "chore(flake): update inputs"
           title: "chore(flake): update inputs"
