@@ -35,8 +35,8 @@ jobs:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-            extra-substituters = https://ryoppippi.cachix.org
-            extra-trusted-public-keys = ryoppippi.cachix.org-1:b2LbtWNvJeL/qb1B6TYOMK+apaCps4SCbzlPRfSQIms=
+            extra-substituters = https://ryoppippi.cachix.org s3://io-vandaele-nix-cache?endpoint=https://storage.googleapis.com&profile=gcp
+            extra-trusted-public-keys = ryoppippi.cachix.org-1:b2LbtWNvJeL/qb1B6TYOMK+apaCps4SCbzlPRfSQIms= io-vandaele-nix-cache:O9fdSbSnySVmQFa353NjmU/lP5GifyVfOmDM2XhBs8Q=
 
       - name: Apply CI config stub
         run: cp ci/config-stub.nix config.nix
@@ -54,11 +54,17 @@ jobs:
           printf '[gcp]\naws_access_key_id = %s\naws_secret_access_key = %s\n' \
             "$GCS_KEY_ID" "$GCS_SECRET" > "$RUNNER_TEMP/gcs-credentials"
           echo "AWS_SHARED_CREDENTIALS_FILE=$RUNNER_TEMP/gcs-credentials" >> "$GITHUB_ENV"
+          # The nix daemon substitutes as root and does not see the env above.
+          sudo mkdir -p /var/root/.aws
+          sudo install -m 600 "$RUNNER_TEMP/gcs-credentials" /var/root/.aws/credentials
 
       - name: Build darwin configuration
         run: |
+          # --max-jobs 1: parallel builds exhaust runner memory (chrome-devtools-mcp tsc).
           nix build '.#darwinConfigurations.aarch64-darwin.system' \
-            --override-input secrets 'path:./ci/secrets-stub'
+            --override-input secrets 'path:./ci/secrets-stub' \
+            --max-jobs 1 \
+            --print-build-logs
 
       - name: Sign store paths
         run: |
@@ -78,3 +84,4 @@ jobs:
           [ -L ./result ] && unlink ./result || true
           rm -f "$RUNNER_TEMP/nix-signing-key"
           rm -f "${AWS_SHARED_CREDENTIALS_FILE:-$RUNNER_TEMP/gcs-credentials}"
+          sudo rm -f /var/root/.aws/credentials
