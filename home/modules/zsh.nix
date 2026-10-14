@@ -8,13 +8,6 @@
 
     autocd = true;
 
-    envExtra = ''
-      export XDG_CACHE_HOME="${config.xdg.cacheHome}"
-      export XDG_CONFIG_HOME="${config.xdg.configHome}"
-      export XDG_DATA_HOME="${config.xdg.dataHome}"
-      export XDG_STATE_HOME="${config.xdg.stateHome}"
-    '';
-
     dotDir = "${config.xdg.configHome}/zsh";
 
     history = {
@@ -23,7 +16,7 @@
       save = 100000;
       path = "${config.xdg.cacheHome}/zsh/history";
       ignoreDups = true;
-      ignorePatterns = [ "l" "l *" "ll" "lla" "la" "lt" "ls" "cd *" ''"cd -"'' "z" "z *" "pwd" "exit" "date" ''"* --help"'' "rm *" "pkill *" "reboot" ];
+      ignorePatterns = [ "l" "l *" "ll" "lla" "la" "lt" "ls" "cd *" "z" "z *" "pwd" "exit" "date" "* --help" "rm *" "pkill *" "reboot" ];
       ignoreSpace = true;
     };
 
@@ -72,11 +65,6 @@
     };
 
     initContent = lib.mkBefore ''
-      if [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
-        . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-        . /nix/var/nix/profiles/default/etc/profile.d/nix.sh
-      fi
-
       # Define variables for directories
       export PATH=$HOME/.local/share/bin:$PATH
 
