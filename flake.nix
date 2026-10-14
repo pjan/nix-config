@@ -129,6 +129,9 @@
 
       devShells.${system} = devShell;
 
+      # `nix fmt`: nixfmt (official Nix style) over all tracked .nix files.
+      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-tree;
+
       apps.${system} = {
         "build" = mkApp "build" ;
         "build-cache" = mkApp "build-cache" ;
