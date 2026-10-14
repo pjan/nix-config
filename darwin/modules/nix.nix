@@ -29,6 +29,12 @@ in {
       options = "--delete-older-than 30d";
     };
 
+    # Deduplicate identical files in the store (hard links); runs after gc.
+    optimise = {
+      automatic = true;
+      interval = { Weekday = 0; Hour = 3; Minute = 0; };
+    };
+
   };
 
 }

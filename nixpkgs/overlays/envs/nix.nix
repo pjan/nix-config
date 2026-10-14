@@ -3,7 +3,6 @@
 pkgs.buildEnv {
   name = "nix-tools";
   paths = with pkgs; [
-    lorri
     nix-bash-completions
     nix-diff
     nix-index
