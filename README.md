@@ -7,17 +7,24 @@
   - [1. Install dependencies](#1-install-dependencies)
   - [2. Install nix](#2-install-nix)
   - [3. Install keys](#3-install-keys)
-  - [4. Clone this repository](#4-clone-this-repository)
-  - [5. Make apps executable](#5-make-apps-executable)
-  - [6. Fix preps](#6-fix-preps)
-  - [7. Build the configuration](#7-build-the-configuration)
-  - [8. Deploy the configuration](#8-deploy-the-configuration)
-  - [9. Manual setups and configurations]()
+  - [4. Clone this repository and configure with variables](#4-clone-this-repository-and-configure-with-variables)
+  - [5. Fix preps](#5-fix-preps)
+  - [6. Build the configuration](#6-build-the-configuration)
+  - [7. Deploy the configuration](#7-deploy-the-configuration)
+  - [8. Manual setups and configurations](#8-manual-setups-and-configurations)
+- [Updating the configuration](#updating-the-configuration)
+  - [Building and switching](#building-and-switching)
+  - [Updating inputs](#updating-inputs)
+  - [Binary cache](#binary-cache)
+  - [Machine-local overrides](#machine-local-overrides)
+- [Secrets](#secrets)
 
 ## Layout
 
 ```
 .
+├─┬─ .github/workflows # CI: eval check, weekly input updates, build and push to the binary cache
+├─┬─ apps              # Scripts behind `nix run .#<app>` (build, switch, cache, ...)
 ├─┬─ brew              # Top folder with homebrew configuration
 │ ├── brews.nix        # List of homebrew brews
 │ ├── casks.nix        # List of homebrew casks
@@ -42,6 +49,8 @@
 │ ├─┬─ overlays        # Folder for all the nixpkgs overlays and extentions
 │ │ └─ ...
 │ └── ...
+├─┬─ ci                # Stub config.nix and secrets used by CI builds
+├── config.nix         # Machine/user variables (username, hostname, brew, ...)
 ├── flake.nix          # The flake file for this repo
 └── README.md          # This file
 ```
@@ -94,21 +103,13 @@ You don't want those changes to be tracked or committed to the repo, which you c
 git update-index --assume-unchanged ./config.nix
 ```
 
-### 5. Make apps executable
-
-Change directory to the repo, and make all
-
-```sh
-find apps/$(uname -m | sed 's/arm64/aarch64/')-darwin -type f \( -name apply -o -name build -o -name build-switch -o -name rollback \) -exec chmod +x {} \;
-```
-
-### 6. Fix preps
+### 5. Fix preps
 
 ```sh
 sudo rm ~/.config && mkdir ~/.config
 ```
 
-### 7. Build the configuration
+### 6. Build the configuration
 
 You can ensure the build works before deploying the configuration. To do so, execute:
 
@@ -116,7 +117,7 @@ You can ensure the build works before deploying the configuration. To do so, exe
 nix run .#build
 ```
 
-### 8. Deploy the configuration
+### 7. Deploy the configuration
 
 Finally, update the system by deploying the configuration:
 
@@ -124,7 +125,7 @@ Finally, update the system by deploying the configuration:
 nix run .#build-switch
 ```
 
-### 9. Manual setups and configurations
+### 8. Manual setups and configurations
 
 Some of the apps that have been installed require to be started, get permissions granted and/or configured manually.
 
@@ -157,4 +158,53 @@ npm install --global alfred-expressvpn
 
 ## Updating the configuration
 
+### Building and switching
+
+```sh
+nix run .#build-switch                           # build and activate in one go
+nix run .#build -- --keep-result && nix run .#switch   # or: build first, activate later
+```
+
+Builds use `path:.`, so uncommitted and git-ignored files (such as the overrides below) are included.
+
+### Updating inputs
+
+The weekly `Update Inputs` workflow updates all flake inputs except the homebrew taps, builds the
+system on macOS, pushes it to the binary cache, and only then opens a `chore(flake): update inputs`
+PR. Merge it, pull, and run `nix run .#build-switch`: everything comes from the cache.
+
+To update manually, or to preview an update without touching `flake.lock`:
+
+```sh
+nix flake update nixpkgs                         # update one input (omit the name for all)
+nix flake update --output-lock-file /tmp/flake.lock.new
+nix build '.#darwinConfigurations.aarch64-darwin.system' --dry-run \
+  --reference-lock-file /tmp/flake.lock.new --no-write-lock-file
+```
+
+### Binary cache
+
+Builds are cached in the `io-vandaele-nix-cache` GCS bucket (S3 API) and signed with the key in
+`/etc/nix/secret-key`; the public key is trusted in `darwin/modules/nix.nix`.
+
+- CI: the `Build and Cache` workflow builds and pushes on every `flake.lock` change on `main`
+  (and on manual dispatch); `Update Inputs` does the same before opening its PR.
+- Locally: `nix run .#build-cache` builds, signs and pushes; `nix run .#cache` pushes an existing
+  `./result`. CI builds with `ci/config-stub.nix`, so packages that only appear in machine-local
+  overrides are not cached by CI; push those with `build-cache`.
+
+### Machine-local overrides
+
+`darwin/overrides.nix` and `home/overrides.nix` are git-ignored and imported when present, for
+settings that only apply to one machine (extra packages, aliases, ...).
+
 ## Secrets
+
+Secrets are managed with [agenix](https://github.com/ryantm/agenix). The encrypted `.age` files live
+in the private `pjan/nix-secrets` repository (the `secrets` flake input, fetched over SSH) and are
+decrypted during activation with the identity `~/.ssh/id_ed25519_agenix`.
+
+The secrets and where they are installed are declared in `darwin/modules/secrets.nix`: the AWS-style
+credentials for the binary cache (user and nix daemon), the cache signing key pair, and the rclone
+service account. To edit a secret, use `agenix -e <name>.age` in a checkout of `nix-secrets`
+(`nix develop` in this repo provides `agenix`). CI builds use `ci/secrets-stub` instead.
