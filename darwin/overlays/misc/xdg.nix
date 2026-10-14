@@ -37,7 +37,7 @@ in {
 
     stateHome = mkOption {
       type = types.path;
-      defaultText = "~/.local/share";
+      defaultText = "~/.local/state";
       description = ''
         Absolute path to directory holding application state.
       '';
