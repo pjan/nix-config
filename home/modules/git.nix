@@ -4,6 +4,7 @@ let
 
   gitName = vars.user.gitName;
   gitEmail = vars.user.email;
+  sslCertFile = vars.nix.sslCertFile;
 
 in {
 
@@ -90,9 +91,6 @@ in {
         # List non-ignored files
         ls-included = "ls-files";
 
-        # Pull fast-forward
-        pull = "pull -ff";
-
         # Pull in remote changes for the current repository and all its submodules
         pull-all = ''!"git pull; git submodule foreach git pull origin master"'';
 
@@ -136,10 +134,7 @@ in {
 
       apply.whitespace = "fix";
       credential.helper = "osxkeychain";
-      ghi.token =
-        "!/usr/bin/security find-internet-password -a pjan -s github.com -l 'ghi token' -w";
       help.autocorrect = 1;
-      hub.protocol = "${pkgs.openssh}/bin/ssh";
       pull.rebase = true;
       rebase.autosquash = true;
       rerere.enabled = true;
@@ -196,12 +191,6 @@ in {
         mnemonicprefix = true;
       };
 
-      "filter \"media\"" = {
-        required = true;
-        clean = "git media clean %f";
-        smudge = "git media smudge %f";
-      };
-
       init = {
         defaultBranch = "main";
       };
@@ -213,7 +202,11 @@ in {
       };
 
       http = {
-        sslCAinfo = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
+        # Same CA bundle as Nix (includes corporate roots, e.g. Zscaler) when configured.
+        sslCAinfo =
+          if sslCertFile != null
+          then sslCertFile
+          else "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
         sslverify = true;
       };
 
@@ -222,21 +215,20 @@ in {
         # recurseSubmodules = "check";
       };
 
+      # gh:/gst: fetch and push over SSH; github:/gist: fetch over HTTPS, push over SSH.
       "url \"git@github.com:\"" = {
         insteadOf = "gh:";
         pushInsteadOf = "github:";
-        # pushInsteadOf = "git://github.com";
       };
 
-      "url \"git://github.com/\"" = { instadOf = "github:"; };
+      "url \"https://github.com/\"" = { insteadOf = "github:"; };
 
       "url \"git@gist.github.com:\"" = {
         insteadOf = "gst:";
         pushInsteadOf = "gist:";
-        # pushInsteadOf = "git://gist.github.com";
       };
 
-      "url \"git://gist.github.com/\"" = { insteadOf = "gist:"; };
+      "url \"https://gist.github.com/\"" = { insteadOf = "gist:"; };
     };
 
     ignores = [
