@@ -92,6 +92,8 @@ git clone git@github.com:pjan/nix-config.git
 ```
 
 Once the repo is cloned, change directory into it, and edit the `config.nix` file with the variables you want set.
+`networking.dns` is optional: leave it out (or `[ ]`) to use the DNS servers from DHCP/VPN, or list fixed servers
+such as `[ "8.8.8.8" "8.8.4.4" ]`.
 
 ```sh
 cd nix-config && vi ./config.nix

@@ -7,7 +7,9 @@ in {
   networking = {
     localHostName = vars.networking.localHostName;
     knownNetworkServices = [ "Wi-Fi" ];
-    dns = [ "8.8.8.8" "8.8.4.4" "2001:4860:4860::8888" "2001:4860:4860::8844" ];
+    # [] = DNS from DHCP/VPN. Set fixed servers per machine with networking.dns in config.nix;
+    # `or` keeps machines whose config.nix predates the setting evaluating.
+    dns = vars.networking.dns or [ ];
   }
   // lib.optionalAttrs (vars.networking.hostName != null && vars.networking.hostName != "") {
     hostName = vars.networking.hostName;
