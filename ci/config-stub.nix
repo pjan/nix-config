@@ -7,6 +7,7 @@
   networking.computerName = "ci-machine";
   networking.localHostName = "ci-machine";
   networking.hostName = null;
+  networking.dns = [ ];
 
   nix.sslCertFile = null;
 
