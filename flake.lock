@@ -298,11 +298,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1777875641,
-        "narHash": "sha256-fRer85DCZnoA6iAxFIENJYUxdCqKoJjFhj1XySEIlcw=",
+        "lastModified": 1791937610,
+        "narHash": "sha256-1IHRs5qj/jrV7fxVAHMKWkOxLL80IG/IpisJequT6wQ=",
         "owner": "pjan",
         "repo": "riptide",
-        "rev": "2109dac9e13609845f022214dd046c6a099beece",
+        "rev": "bb7b39ea86178306f365e16abd95e9dea48182de",
         "type": "github"
       },
       "original": {
