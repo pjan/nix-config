@@ -8,7 +8,7 @@
   - [2. Install nix](#2-install-nix)
   - [3. Install keys](#3-install-keys)
   - [4. Clone this repository and configure with variables](#4-clone-this-repository-and-configure-with-variables)
-  - [5. Fix preps](#5-fix-preps)
+  - [5. Prepare ~/.config](#5-prepare-config)
   - [6. Build the configuration](#6-build-the-configuration)
   - [7. Deploy the configuration](#7-deploy-the-configuration)
   - [8. Manual setups and configurations](#8-manual-setups-and-configurations)
@@ -65,14 +65,11 @@ xcode-select --install
 
 ### 2. Install nix
 
-We'll be using the [Determinate Systems installer](https://zero-to-nix.com/concepts/nix-installer).
-
-> [!IMPORTANT]
->
-> Make sure you answer _No_ when the installer asks if you want to install Determinate Nix, as it [conflicts with nix-darwin](https://github.com/dustinlyons/nixos-config/issues/146).
+We'll be using the [Lix installer](https://lix.systems/install/) with its defaults (multi-user daemon, flakes enabled).
+It only bootstraps: after the first deploy, nix-darwin provides the Nix daemon and CLI (see the cleanup in step 7).
 
 ```sh
-curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+curl -sSf -L https://install.lix.systems/lix | sh -s -- install
 ```
 
 ### 3. Install keys
@@ -105,10 +102,15 @@ You don't want those changes to be tracked or committed to the repo, which you c
 git update-index --assume-unchanged ./config.nix
 ```
 
-### 5. Fix preps
+### 5. Prepare ~/.config
+
+Home Manager writes into `~/.config`, which must be a directory owned by you. Replace a leftover symlink or file,
+create the directory if needed, and fix its ownership if an earlier `sudo` command created it as root. An existing
+directory and its contents are kept.
 
 ```sh
-sudo rm ~/.config && mkdir ~/.config
+if [ -L ~/.config ] || [ -f ~/.config ]; then sudo rm ~/.config; fi
+mkdir -p ~/.config && sudo chown "$(id -un)" ~/.config
 ```
 
 ### 6. Build the configuration
@@ -125,6 +127,16 @@ Finally, update the system by deploying the configuration:
 
 ```sh
 nix run .#build-switch
+```
+
+From now on nix-darwin provides Nix. Open a new terminal, then remove what the installer left behind: the Lix
+package in the default profile, and the installer's boot-time repair hook (it waits for `/nix/lix-installer`, which
+the installer doesn't keep). Keep `/nix/nix-installer` and `/nix/receipt.json`; they are needed to uninstall Nix.
+
+```sh
+sudo /run/current-system/sw/bin/nix-env -p /nix/var/nix/profiles/default -e lix
+sudo launchctl bootout system/systems.lix.nix-installer.nix-hook
+sudo rm /Library/LaunchDaemons/systems.lix.nix-installer.nix-hook.plist
 ```
 
 ### 8. Manual setups and configurations
