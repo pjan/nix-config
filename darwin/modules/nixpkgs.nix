@@ -1,8 +1,15 @@
-{ config, lib, overlays, pkgs, ... }:
+{
+  config,
+  lib,
+  overlays,
+  pkgs,
+  ...
+}:
 
 let
 
-in {
+in
+{
 
   nixpkgs = {
     config = {

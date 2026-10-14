@@ -7,7 +7,8 @@ let
   defaultConfigHome = "${config.home.homeDirectory}/.config";
   defaultDataHome = "${config.home.homeDirectory}/.local/share";
   defaultStateHome = "${config.home.homeDirectory}/.local/state";
-in {
+in
+{
 
   options.xdg = {
 

@@ -19,7 +19,10 @@ self: super: {
 
     npmDepsHash = "sha256-ToWy0Q5snPWnA5fpRExz/XalzBYYt+d0f5+FY+GdxYk=";
 
-    npmFlags = [ "--omit=dev" "--legacy-peer-deps" ];
+    npmFlags = [
+      "--omit=dev"
+      "--legacy-peer-deps"
+    ];
 
     dontNpmBuild = true;
 

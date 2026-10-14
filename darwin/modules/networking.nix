@@ -1,8 +1,15 @@
-{ config, lib, pkgs, vars, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  vars,
+  ...
+}:
 
 let
 
-in {
+in
+{
 
   networking = {
     localHostName = vars.networking.localHostName;

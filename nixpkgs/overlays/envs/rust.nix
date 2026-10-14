@@ -3,6 +3,6 @@
 pkgs.buildEnv {
   name = "rust-tools";
   paths = with pkgs; [
-    cargo-cache        # Display information on the cargo cache
+    cargo-cache # Display information on the cargo cache
   ];
 }

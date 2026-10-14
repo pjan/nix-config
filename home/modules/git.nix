@@ -1,4 +1,10 @@
-{ config, lib, pkgs, vars, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  vars,
+  ...
+}:
 
 let
 
@@ -6,7 +12,8 @@ let
   gitEmail = vars.user.email;
   sslCertFile = vars.nix.sslCertFile;
 
-in {
+in
+{
 
   programs.git = {
     enable = true;
@@ -59,7 +66,7 @@ in {
         d = "!git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat";
 
         # Show the diff between the nth latest commit (defaults to 1) and the current state
-        di = ''!d() { REV=''${1:-1}; git diff --patch-with-stat HEAD~$REV; }; git diff-index --quiet HEAD -- || clear; d'';
+        di = "!d() { REV=\${1:-1}; git diff --patch-with-stat HEAD~$REV; }; git diff-index --quiet HEAD -- || clear; d";
 
         # Find branches containing commit
         fb = "!f() { git branch -a --contains $1; }; f";
@@ -204,9 +211,7 @@ in {
       http = {
         # Same CA bundle as Nix (includes corporate roots, e.g. Zscaler) when configured.
         sslCAinfo =
-          if sslCertFile != null
-          then sslCertFile
-          else "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
+          if sslCertFile != null then sslCertFile else "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
         sslverify = true;
       };
 
@@ -221,14 +226,18 @@ in {
         pushInsteadOf = "github:";
       };
 
-      "url \"https://github.com/\"" = { insteadOf = "github:"; };
+      "url \"https://github.com/\"" = {
+        insteadOf = "github:";
+      };
 
       "url \"git@gist.github.com:\"" = {
         insteadOf = "gst:";
         pushInsteadOf = "gist:";
       };
 
-      "url \"https://gist.github.com/\"" = { insteadOf = "gist:"; };
+      "url \"https://gist.github.com/\"" = {
+        insteadOf = "gist:";
+      };
     };
 
     ignores = [

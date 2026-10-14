@@ -1,6 +1,7 @@
 { pkgs }:
 
-with pkgs; [
+with pkgs;
+[
 
   tools.ai
   tools.dev
@@ -10,7 +11,7 @@ with pkgs; [
   tools.media
   tools.network
   tools.nix
-# tools.rust
+  # tools.rust
   tools.security
   tools.system
 

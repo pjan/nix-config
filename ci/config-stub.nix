@@ -14,5 +14,5 @@
   brew.enable = false;
   brew.cleanup = null;
 
-  shell.sessionPath = [];
+  shell.sessionPath = [ ];
 }

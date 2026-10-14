@@ -1,4 +1,14 @@
-{ config, homebrew-bundle, homebrew-cask, homebrew-core, homebrew-subtlesoft, lib, pkgs, vars,... }:
+{
+  config,
+  homebrew-bundle,
+  homebrew-cask,
+  homebrew-core,
+  homebrew-subtlesoft,
+  lib,
+  pkgs,
+  vars,
+  ...
+}:
 
 let
 
@@ -6,7 +16,8 @@ let
   cleanup = vars.brew.cleanup;
   userName = vars.user.username;
 
-in lib.mkIf brewEnabled {
+in
+lib.mkIf brewEnabled {
 
   nix-homebrew = {
     user = userName;
@@ -25,18 +36,17 @@ in lib.mkIf brewEnabled {
 
     enable = true;
 
-    onActivation =
-      {
-        autoUpdate = true;
-        upgrade = true;
-      }
-      // lib.optionalAttrs (cleanup != null) {
-        inherit cleanup;
-      };
+    onActivation = {
+      autoUpdate = true;
+      upgrade = true;
+    }
+    // lib.optionalAttrs (cleanup != null) {
+      inherit cleanup;
+    };
 
     # taps = [ "homebrew/services" "macos-fuse-t/homebrew-cask" ];
-    brews = pkgs.callPackage ./brews.nix {};
-    casks = pkgs.callPackage ./casks.nix {};
+    brews = pkgs.callPackage ./brews.nix { };
+    casks = pkgs.callPackage ./casks.nix { };
 
   };
 

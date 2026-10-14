@@ -9,14 +9,14 @@ pkgs.buildEnv {
     ast-grep
     bash-completion
     bashInteractive
-    bat              # alternative to cat
+    bat # alternative to cat
     coreutils
     # csvkit
     ctop
     curl
     direnv
     exiv2
-    fd               # alternative to find
+    fd # alternative to find
     fdupes
     findutils
     fswatch

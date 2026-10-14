@@ -4,7 +4,8 @@ let
   inherit (lib) mkOption mkDefault types;
 
   defaultHome = "/Users/${config.user.username}";
-in {
+in
+{
 
   options.home = {
 

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
 
@@ -16,7 +21,25 @@
       save = 100000;
       path = "${config.xdg.cacheHome}/zsh/history";
       ignoreDups = true;
-      ignorePatterns = [ "l" "l *" "ll" "lla" "la" "lt" "ls" "cd *" "z" "z *" "pwd" "exit" "date" "* --help" "rm *" "pkill *" "reboot" ];
+      ignorePatterns = [
+        "l"
+        "l *"
+        "ll"
+        "lla"
+        "la"
+        "lt"
+        "ls"
+        "cd *"
+        "z"
+        "z *"
+        "pwd"
+        "exit"
+        "date"
+        "* --help"
+        "rm *"
+        "pkill *"
+        "reboot"
+      ];
       ignoreSpace = true;
     };
 

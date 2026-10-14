@@ -1,4 +1,11 @@
-{ config, inputs, lib, pkgs, vars, ... }:
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  vars,
+  ...
+}:
 
 let
 
@@ -10,11 +17,12 @@ let
   userFullName = vars.user.fullName;
   userEmail = vars.user.email;
 
-in {
+in
+{
 
   home-manager.useGlobalPkgs = true;
   home-manager.extraSpecialArgs = { inherit inputs vars; };
-  home-manager.users.${userName} = { ... }:{
+  home-manager.users.${userName} = { ... }: {
 
     user.username = userName;
     user.fullName = userFullName;
@@ -27,19 +35,20 @@ in {
 
     home.stateVersion = "24.11";
     home.enableNixpkgsReleaseCheck = false;
-    home.packages = pkgs.callPackage ./packages {};
+    home.packages = pkgs.callPackage ./packages { };
 
     home.sessionVariables = {
-      XDG_CACHE_HOME  = cacheHome;
+      XDG_CACHE_HOME = cacheHome;
       XDG_CONFIG_HOME = configHome;
-      XDG_DATA_HOME   = dataHome;
-      XDG_STATE_HOME  = stateHome;
+      XDG_DATA_HOME = dataHome;
+      XDG_STATE_HOME = stateHome;
     };
 
-    imports = [ ./overlays ]
-      ++ lib.filter (n: lib.strings.hasSuffix ".nix" n)
-           (lib.filesystem.listFilesRecursive ./modules)
-      ++ lib.optional (builtins.pathExists ./overrides.nix) ./overrides.nix;
+    imports = [
+      ./overlays
+    ]
+    ++ lib.filter (n: lib.strings.hasSuffix ".nix" n) (lib.filesystem.listFilesRecursive ./modules)
+    ++ lib.optional (builtins.pathExists ./overrides.nix) ./overrides.nix;
 
   };
 

@@ -1,8 +1,14 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
-in {
+in
+{
 
   programs.dircolors = {
 
@@ -130,7 +136,7 @@ in {
       ".reg" = "01;36";
 
       #+--- Ignores ---+
-      "*~ 02" ="37";
+      "*~ 02" = "37";
       ".bak" = "02;37";
       ".BAK" = "02;37";
       ".log" = "02;37";

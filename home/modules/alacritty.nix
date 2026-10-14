@@ -1,8 +1,14 @@
-{ config, lib, pkgs, ...}:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
-in {
+in
+{
 
   programs.alacritty = {
 
@@ -52,8 +58,8 @@ in {
 
         search = {
           matches = {
-          foreground = "0x1e1e2e";
-          background = "0xa6adc8";
+            foreground = "0x1e1e2e";
+            background = "0xa6adc8";
           };
           focused_match = {
             foreground = "0x1e1e2e";

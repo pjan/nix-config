@@ -79,7 +79,27 @@
     };
   };
 
-  outputs = { self, flake-utils, nixpkgs, systems, home-manager, darwin, nix-homebrew, agenix, homebrew-bundle, homebrew-core, homebrew-cask, homebrew-subtlesoft, secrets, beatport-dl, riptide, nix-claude-code, codex-cli-nix, nix-pkgs } @inputs:
+  outputs =
+    {
+      self,
+      flake-utils,
+      nixpkgs,
+      systems,
+      home-manager,
+      darwin,
+      nix-homebrew,
+      agenix,
+      homebrew-bundle,
+      homebrew-core,
+      homebrew-cask,
+      homebrew-subtlesoft,
+      secrets,
+      beatport-dl,
+      riptide,
+      nix-claude-code,
+      codex-cli-nix,
+      nix-pkgs,
+    }@inputs:
     let
 
       vars = import ./config.nix;
@@ -90,11 +110,13 @@
         # Apply each overlay found in the /overlays directory
         let
           path = ./nixpkgs/overlays;
-          importOverlays = with builtins;
-            map (n: import (path + ("/" + n)))
-              (filter (n: match ".*\\.nix" n != null ||
-                        pathExists (path + ("/" + n + "/default.nix")))
-                    (attrNames (readDir path)));
+          importOverlays =
+            with builtins;
+            map (n: import (path + ("/" + n))) (
+              filter (n: match ".*\\.nix" n != null || pathExists (path + ("/" + n + "/default.nix"))) (
+                attrNames (readDir path)
+              )
+            );
           flakeOverlays = [
             beatport-dl.overlays."${system}".default
             nix-claude-code.overlays.default
@@ -102,30 +124,44 @@
             nix-pkgs.overlays.default
           ];
         in
-          importOverlays ++ flakeOverlays;
+        importOverlays ++ flakeOverlays;
 
-
-      devShell = let pkgs = nixpkgs.legacyPackages.${system}.appendOverlays overlays; in {
-        default = with pkgs; mkShell {
-          nativeBuildInputs = with pkgs; [ bashInteractive git age agenix.packages.${system}.agenix age-plugin-yubikey ];
-          shellHook = with pkgs; ''
-            export EDITOR=vim
-          '';
+      devShell =
+        let
+          pkgs = nixpkgs.legacyPackages.${system}.appendOverlays overlays;
+        in
+        {
+          default =
+            with pkgs;
+            mkShell {
+              nativeBuildInputs = with pkgs; [
+                bashInteractive
+                git
+                age
+                agenix.packages.${system}.agenix
+                age-plugin-yubikey
+              ];
+              shellHook = with pkgs; ''
+                export EDITOR=vim
+              '';
+            };
         };
-      };
 
       mkApp = scriptName: {
         type = "app";
-        program = "${(nixpkgs.legacyPackages.${system}.writeScriptBin scriptName ''
-          #!/usr/bin/env bash
-          PATH=${nixpkgs.legacyPackages.${system}.git}/bin:$PATH
-          echo "Running ${scriptName} for ${system}"
-          exec ${self}/apps/${system}/${scriptName} "$@"
-        '')}/bin/${scriptName}";
+        program = "${
+          (nixpkgs.legacyPackages.${system}.writeScriptBin scriptName ''
+            #!/usr/bin/env bash
+            PATH=${nixpkgs.legacyPackages.${system}.git}/bin:$PATH
+            echo "Running ${scriptName} for ${system}"
+            exec ${self}/apps/${system}/${scriptName} "$@"
+          '')
+        }/bin/${scriptName}";
         meta.description = "nix-darwin ${scriptName} for ${system}";
       };
 
-    in {
+    in
+    {
 
       devShells.${system} = devShell;
 
@@ -133,36 +169,40 @@
       formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-tree;
 
       apps.${system} = {
-        "build" = mkApp "build" ;
-        "build-cache" = mkApp "build-cache" ;
-        "build-switch" = mkApp "build-switch" ;
-        "cache" = mkApp "cache" ;
-        "rollback" = mkApp "rollback" ;
-        "switch" = mkApp "switch" ;
+        "build" = mkApp "build";
+        "build-cache" = mkApp "build-cache";
+        "build-switch" = mkApp "build-switch";
+        "cache" = mkApp "cache";
+        "rollback" = mkApp "rollback";
+        "switch" = mkApp "switch";
       };
 
-      darwinConfigurations.${system} =
-        darwin.lib.darwinSystem {
-          inherit system;
-          specialArgs = {
-            inherit inputs overlays vars;
-            inherit (inputs) homebrew-bundle homebrew-core homebrew-cask homebrew-subtlesoft;
-            secrets = inputs.secrets;
-          };
-          modules = [
-            home-manager.darwinModules.home-manager
-            {
-              home-manager.sharedModules = [
-                inputs.riptide.homeManagerModules.default
-              ];
-            }
-            nix-homebrew.darwinModules.nix-homebrew
-            agenix.darwinModules.default
-            ./darwin # load the nix-darwin configuration
-            ./home   # load the home-manager configuration
-            ./brew   # load the nix-homebrew configuration
-          ];
+      darwinConfigurations.${system} = darwin.lib.darwinSystem {
+        inherit system;
+        specialArgs = {
+          inherit inputs overlays vars;
+          inherit (inputs)
+            homebrew-bundle
+            homebrew-core
+            homebrew-cask
+            homebrew-subtlesoft
+            ;
+          secrets = inputs.secrets;
         };
+        modules = [
+          home-manager.darwinModules.home-manager
+          {
+            home-manager.sharedModules = [
+              inputs.riptide.homeManagerModules.default
+            ];
+          }
+          nix-homebrew.darwinModules.nix-homebrew
+          agenix.darwinModules.default
+          ./darwin # load the nix-darwin configuration
+          ./home # load the home-manager configuration
+          ./brew # load the nix-homebrew configuration
+        ];
+      };
 
     };
 

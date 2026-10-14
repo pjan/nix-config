@@ -1,11 +1,17 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
 
   homeDirectory = config.home.homeDirectory;
   dataHome = config.xdg.dataHome;
 
-in {
+in
+{
 
   launchd.user.agents.aria2c = {
     script = ''

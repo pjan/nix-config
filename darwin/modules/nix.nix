@@ -1,14 +1,27 @@
-{ config, lib, pkgs, vars, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  vars,
+  ...
+}:
 
 let
   sslCertFile = vars.nix.sslCertFile;
-in {
+in
+{
 
   nix = {
 
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
-      trusted-users = [ "@admin" "${config.user.username}" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      trusted-users = [
+        "@admin"
+        "${config.user.username}"
+      ];
       substituters = [
         "https://cache.nixos.org"
         "https://nix-community.cachix.org"
@@ -19,20 +32,29 @@ in {
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "io-vandaele-nix-cache:O9fdSbSnySVmQFa353NjmU/lP5GifyVfOmDM2XhBs8Q="
       ];
-    } // lib.optionalAttrs (sslCertFile != null) {
+    }
+    // lib.optionalAttrs (sslCertFile != null) {
       ssl-cert-file = sslCertFile;
     };
 
     gc = {
       automatic = true;
-      interval = { Weekday = 0; Hour = 2; Minute = 0; };
+      interval = {
+        Weekday = 0;
+        Hour = 2;
+        Minute = 0;
+      };
       options = "--delete-older-than 30d";
     };
 
     # Deduplicate identical files in the store (hard links); runs after gc.
     optimise = {
       automatic = true;
-      interval = { Weekday = 0; Hour = 3; Minute = 0; };
+      interval = {
+        Weekday = 0;
+        Hour = 3;
+        Minute = 0;
+      };
     };
 
   };
