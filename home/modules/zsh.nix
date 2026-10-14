@@ -112,4 +112,8 @@
     '';
   };
 
+  home.file.".zshenv".text = lib.mkAfter ''
+    export PATH="''${HOME}/.local/bin:''${PATH}"
+  '';
+
 }
