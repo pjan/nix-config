@@ -41,7 +41,8 @@ in
 
   services.gpg-agent = {
     enable = true;
-    enableSshSupport = true;
+    # SSH keys are served by the 1Password agent (see ssh.nix).
+    enableSshSupport = false;
     defaultCacheTtl = 86400;
     maxCacheTtl = 86400;
     pinentry.package = pkgs.pinentry_mac;

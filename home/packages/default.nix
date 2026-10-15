@@ -21,6 +21,7 @@ with pkgs;
   openssh
 
   # Encryption and security tools
+  _1password-cli
   age
   age-plugin-yubikey
   libfido2
