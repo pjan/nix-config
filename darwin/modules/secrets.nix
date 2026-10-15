@@ -59,6 +59,15 @@
         group = "staff";
       };
 
+      # GitHub token for the GitHub MCP server in Claude Code. Stays at the default path
+      # (/run/agenix/github-mcp-token, on agenix's RAM disk); read by home/modules/github-mcp.nix.
+      "github-mcp-token" = {
+        file = "${secrets}/github-mcp-token.age";
+        mode = "400";
+        owner = "${config.user.username}";
+        group = "staff";
+      };
+
     };
   };
 }

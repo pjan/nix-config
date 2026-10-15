@@ -238,6 +238,21 @@ that reads `pjan/nix-secrets` on a new machine are kept in the `Bootstrap` vault
 `nix run .#bootstrap` (see Install, step 4).
 
 The secrets and where they are installed are declared in `darwin/modules/secrets.nix`: the AWS-style
-credentials for the binary cache (user and nix daemon), the cache signing key pair, and the rclone
-service account. To edit a secret, use `agenix -e <name>.age` in a checkout of `nix-secrets`
-(`nix develop` in this repo provides `agenix`). CI builds use `ci/secrets-stub` instead.
+credentials for the binary cache (user and nix daemon), the cache signing key pair, the rclone
+service account, and the GitHub token for Claude Code (below). To edit a secret, use `agenix -e <name>.age` in a
+checkout of `nix-secrets` (`nix develop` in this repo provides `agenix`). CI builds use `ci/secrets-stub` instead,
+which needs an empty placeholder for every secret.
+
+### GitHub MCP server for Claude Code
+
+The token is not exported in the shell environment. Claude Code reads it through a `headersHelper`,
+`~/.local/bin/github-mcp-headers`, which prints the `Authorization` header from the agenix secret
+`/run/agenix/github-mcp-token`. Register the server once per machine, and turn off the `github` plugin from
+`claude-plugins-official` (`/plugin`), which expects the token in `GITHUB_PERSONAL_ACCESS_TOKEN` instead:
+
+```sh
+claude mcp add-json --scope user github \
+  "{\"type\":\"http\",\"url\":\"https://api.githubcopilot.com/mcp/\",\"headersHelper\":\"$HOME/.local/bin/github-mcp-headers\"}"
+```
+
+Check with `/mcp` in a new Claude session that `github` is connected.
