@@ -6,8 +6,8 @@
 - [Install](#install)
   - [1. Install dependencies](#1-install-dependencies)
   - [2. Install nix](#2-install-nix)
-  - [3. Install keys](#3-install-keys)
-  - [4. Clone this repository and configure with variables](#4-clone-this-repository-and-configure-with-variables)
+  - [3. Clone this repository and configure with variables](#3-clone-this-repository-and-configure-with-variables)
+  - [4. Bootstrap the keys](#4-bootstrap-the-keys)
   - [5. Prepare ~/.config](#5-prepare-config)
   - [6. Build the configuration](#6-build-the-configuration)
   - [7. Deploy the configuration](#7-deploy-the-configuration)
@@ -72,20 +72,13 @@ It only bootstraps: after the first deploy, nix-darwin provides the Nix daemon a
 curl -sSf -L https://install.lix.systems/lix | sh -s -- install
 ```
 
-### 3. Install keys
+### 3. Clone this repository and configure with variables
 
-The configuration keeps secrets secret with agenix. In order to deploy the secrets (and to clone this repository over ssh), make sure the necessary keys are installed:
-
-```sh
-curl -Lo ssh.zip https://github.com/pjan/archives/raw/refs/heads/main/ssh.zip && unzip ssh.zip -d ~/.ssh && rm ssh.zip
-```
-
-### 4. Clone this repository and configure with variables
-
-With all the necessary keys installed, you can now clone this repository. Change directory to where you want to store the repo locally, and clone it:
+The repository is public, so clone it over HTTPS (no keys needed yet). Change directory to where you want to store
+the repo locally, and clone it:
 
 ```sh
-git clone git@github.com:pjan/nix-config.git
+git clone https://github.com/pjan/nix-config.git
 ```
 
 Once the repo is cloned, change directory into it, and edit the `config.nix` file with the variables you want set.
@@ -101,6 +94,22 @@ You don't want those changes to be tracked or committed to the repo, which you c
 ```sh
 git update-index --assume-unchanged ./config.nix
 ```
+
+### 4. Bootstrap the keys
+
+The first build needs two SSH keys, kept in the `Bootstrap` vault in 1Password: a read-only deploy key for the
+private `pjan/nix-secrets` repository (the `secrets` flake input) and the agenix identity that decrypts the secrets
+during activation. Restore them with:
+
+```sh
+nix run .#bootstrap
+```
+
+It signs in with the 1Password CLI only, so the 1Password app isn't needed yet; have your sign-in address, email,
+Secret Key and password ready. It adds GitHub's host keys to `~/.ssh/known_hosts`, writes
+`~/.ssh/id_ed25519_agenix` and `~/.ssh/id_ed25519` (the deploy key), checks both against their expected fingerprints,
+and verifies that `pjan/nix-secrets` is readable. It is safe to re-run, and never overwrites an existing, different
+key.
 
 ### 5. Prepare ~/.config
 
@@ -137,6 +146,14 @@ the installer doesn't keep). Keep `/nix/nix-installer` and `/nix/receipt.json`; 
 sudo /run/current-system/sw/bin/nix-env -p /nix/var/nix/profiles/default -e lix
 sudo launchctl bootout system/systems.lix.nix-installer.nix-hook
 sudo rm /Library/LaunchDaemons/systems.lix.nix-installer.nix-hook.plist
+```
+
+Once your own GitHub key works over SSH on this machine (`ssh -T git@github.com`), push over SSH and remove the
+bootstrap deploy key. Keep it until then: later builds still fetch `pjan/nix-secrets` with it.
+
+```sh
+git remote set-url --push origin git@github.com:pjan/nix-config.git
+rm ~/.ssh/id_ed25519
 ```
 
 ### 8. Manual setups and configurations
@@ -216,7 +233,9 @@ settings that only apply to one machine (extra packages, aliases, ...).
 
 Secrets are managed with [agenix](https://github.com/ryantm/agenix). The encrypted `.age` files live
 in the private `pjan/nix-secrets` repository (the `secrets` flake input, fetched over SSH) and are
-decrypted during activation with the identity `~/.ssh/id_ed25519_agenix`.
+decrypted during activation with the identity `~/.ssh/id_ed25519_agenix`. Both that identity and the deploy key
+that reads `pjan/nix-secrets` on a new machine are kept in the `Bootstrap` vault in 1Password and restored by
+`nix run .#bootstrap` (see Install, step 4).
 
 The secrets and where they are installed are declared in `darwin/modules/secrets.nix`: the AWS-style
 credentials for the binary cache (user and nix daemon), the cache signing key pair, and the rclone
