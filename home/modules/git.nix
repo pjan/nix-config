@@ -12,6 +12,9 @@ let
   gitEmail = vars.user.email;
   sslCertFile = vars.nix.sslCertFile;
 
+  # Public half of the "Github (pjan)" SSH key in 1Password; signs commits and tags.
+  signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK0L6BtkYnTzCxl5L2UlPsp18Im68t0mLE56NhZQZMWK";
+
 in
 {
 
@@ -23,13 +26,6 @@ in
         name = "${gitName}";
         email = "${gitEmail}";
       };
-
-      # TODO: fix below
-
-      # signing = {
-      #   key = "1FE9F3FD598C6559";
-      #   signByDefault = true;
-      # };
 
       alias = {
         # Commit all changes
@@ -270,7 +266,18 @@ in
 
     lfs.enable = true;
 
-    signing.format = null;
+    # Sign with the SSH key in 1Password (Touch ID per signature); op-ssh-sign talks to the app
+    # directly, independent of SSH_AUTH_SOCK/IdentityAgent.
+    signing = {
+      format = "ssh";
+      key = signingKey;
+      signer = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
+      signByDefault = true;
+      # Lets `git log --show-signature` / `git verify-commit` verify locally.
+      allowedSigners = ''
+        ${gitEmail} namespaces="git" ${signingKey}
+      '';
+    };
 
   };
 
