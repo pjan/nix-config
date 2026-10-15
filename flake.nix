@@ -160,6 +160,29 @@
         meta.description = "nix-darwin ${scriptName} for ${system}";
       };
 
+      # Runs on a new machine before its first build, so it may only depend on nixpkgs:
+      # inputs are fetched lazily, and the private `secrets` input is not reachable yet.
+      bootstrapPkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfreePredicate = pkg: nixpkgs.lib.getName pkg == "1password-cli";
+      };
+      bootstrapApp = {
+        type = "app";
+        program = nixpkgs.lib.getExe (
+          bootstrapPkgs.writeShellApplication {
+            name = "bootstrap";
+            runtimeInputs = with bootstrapPkgs; [
+              _1password-cli
+              git
+              jq
+              openssh
+            ];
+            text = builtins.readFile ./apps/${system}/bootstrap;
+          }
+        );
+        meta.description = "Restore the SSH keys a new machine needs for its first build from 1Password";
+      };
+
     in
     {
 
@@ -169,6 +192,7 @@
       formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-tree;
 
       apps.${system} = {
+        "bootstrap" = bootstrapApp;
         "build" = mkApp "build";
         "build-cache" = mkApp "build-cache";
         "build-switch" = mkApp "build-switch";
