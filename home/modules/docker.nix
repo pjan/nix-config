@@ -18,7 +18,8 @@ let
     text = ''
       case "''${1:-}" in
         get)
-          read -r server
+          # docker writes the server without a trailing newline, so `read` would hit EOF and fail.
+          server="$(cat)"
           case "$server" in
             ghcr.io | https://ghcr.io)
               ${jq} -cn --rawfile t ${tokenFile} --arg s "$server" \
