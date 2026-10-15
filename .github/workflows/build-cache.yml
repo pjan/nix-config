@@ -8,9 +8,12 @@ on:
       - flake.lock
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   build-cache:
-    runs-on: macos-14
+    runs-on: macos-15
     env:
       NIXPKGS_ALLOW_UNFREE: "1"
       AWS_REQUEST_CHECKSUM_CALCULATION: when_required
@@ -41,16 +44,12 @@ jobs:
       - name: Apply CI config stub
         run: cp ci/config-stub.nix config.nix
 
-      - name: Write nix signing key
-        env:
-          NIX_SIGNING_KEY: ${{ secrets.NIX_SIGNING_KEY }}
-        run: printf '%s' "$NIX_SIGNING_KEY" > "$RUNNER_TEMP/nix-signing-key"
-
       - name: Write GCS credentials
         env:
           GCS_KEY_ID: ${{ secrets.GCS_HMAC_ACCESS_KEY_ID }}
           GCS_SECRET: ${{ secrets.GCS_HMAC_SECRET_ACCESS_KEY }}
         run: |
+          umask 077
           printf '[gcp]\naws_access_key_id = %s\naws_secret_access_key = %s\n' \
             "$GCS_KEY_ID" "$GCS_SECRET" > "$RUNNER_TEMP/gcs-credentials"
           echo "AWS_SHARED_CREDENTIALS_FILE=$RUNNER_TEMP/gcs-credentials" >> "$GITHUB_ENV"
@@ -65,6 +64,13 @@ jobs:
             --override-input secrets 'path:./ci/secrets-stub' \
             --max-jobs 1 \
             --print-build-logs
+
+      - name: Write nix signing key
+        env:
+          NIX_SIGNING_KEY: ${{ secrets.NIX_SIGNING_KEY }}
+        run: |
+          umask 077
+          printf '%s' "$NIX_SIGNING_KEY" > "$RUNNER_TEMP/nix-signing-key"
 
       - name: Sign store paths
         run: |
