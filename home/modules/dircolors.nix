@@ -7,12 +7,28 @@
 
 let
 
+  # `dircolors -b` output (sets LS_COLORS), generated at build time so a new
+  # shell doesn't have to run dircolors. The output doesn't depend on $TERM.
+  dircolorsZshInit = pkgs.runCommand "dircolors-init.zsh" { } ''
+    ${lib.getExe' config.programs.dircolors.package "dircolors"} -b ${
+      config.home.file.".dir_colors".source
+    } > $out
+  '';
+
 in
 {
+
+  # Same position as home-manager's integration: before oh-my-zsh (order 550).
+  programs.zsh.initContent = lib.mkOrder 550 ''
+    source ${dircolorsZshInit}
+  '';
 
   programs.dircolors = {
 
     enable = true;
+
+    # Replaced by the pre-generated init above.
+    enableZshIntegration = false;
 
     settings = {
       #+-----------------+

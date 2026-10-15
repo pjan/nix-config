@@ -29,6 +29,13 @@ in
     shell = pkgs.zsh;
   };
 
+  # home-manager sets up completion (oh-my-zsh) and the prompt (powerlevel10k)
+  # per user. Doing it in /etc/zshrc too runs compinit twice and shares one
+  # .zcompdump between /bin/zsh and nix zsh, which rebuild it in turn.
+  programs.zsh.enableGlobalCompInit = false;
+  programs.zsh.enableBashCompletion = false;
+  programs.zsh.promptInit = "";
+
   system.stateVersion = 5;
   system.checks.verifyNixPath = false;
   system.primaryUser = userName;
