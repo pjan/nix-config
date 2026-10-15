@@ -256,3 +256,10 @@ claude mcp add-json --scope user github \
 ```
 
 Check with `/mcp` in a new Claude session that `github` is connected.
+
+### Docker: GitHub Container Registry
+
+Docker gets the `ghcr.io` token from the credential helper `docker-credential-agenix`, which reads the agenix secret
+`/run/agenix/ghcr-token`; activation sets `"credHelpers": {"ghcr.io": "agenix"}` in `~/.docker/config.json` and
+removes any plaintext `ghcr.io` entry. `docker login ghcr.io` is not needed (the helper refuses to store credentials).
+To rotate the token, update it in 1Password and `nix-secrets` (`agenix -e ghcr-token.age`), then switch.

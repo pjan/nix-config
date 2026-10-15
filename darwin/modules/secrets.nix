@@ -68,6 +68,15 @@
         group = "staff";
       };
 
+      # GitHub Container Registry token for docker. Stays at the default path
+      # (/run/agenix/ghcr-token); served by the credential helper in home/modules/docker.nix.
+      "ghcr-token" = {
+        file = "${secrets}/ghcr-token.age";
+        mode = "400";
+        owner = "${config.user.username}";
+        group = "staff";
+      };
+
     };
   };
 }
