@@ -25,8 +25,6 @@ in
   users.users.${userName} = {
     name = userName;
     home = homeDirectory;
-    isHidden = false;
-    shell = pkgs.zsh;
   };
 
   # home-manager sets up completion (oh-my-zsh) and the prompt (powerlevel10k)
@@ -37,7 +35,6 @@ in
   programs.zsh.promptInit = "";
 
   system.stateVersion = 5;
-  system.checks.verifyNixPath = false;
   system.primaryUser = userName;
 
   imports = [
