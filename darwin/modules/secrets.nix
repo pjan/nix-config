@@ -66,6 +66,15 @@
         group = "staff";
       };
 
+      # aria2 RPC secret token. Stays at the default path
+      # (/run/agenix/aria2-rpc-secret); read by darwin/modules/aria2.nix.
+      "aria2-rpc-secret" = {
+        file = "${secrets}/aria2-rpc-secret.age";
+        mode = "400";
+        owner = "${config.user.username}";
+        group = "staff";
+      };
+
     };
   };
 }
