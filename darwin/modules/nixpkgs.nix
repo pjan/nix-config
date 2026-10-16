@@ -14,7 +14,6 @@ in
   nixpkgs = {
     config = {
       allowUnfree = true;
-      allowInsecure = false;
       allowUnsupportedSystem = false;
 
       permittedInsecurePackages = [ ];

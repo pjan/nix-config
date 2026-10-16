@@ -94,9 +94,8 @@ in
     set-option -g set-titles on
     set-option -g set-titles-string "#(whoami)@#H [#S-#I-#P] #W - #T"
 
-    # Left status bar
-    set -g status-bg colour235
-    set -g status-left-fg colour239
+    # Status bar
+    set -g status-style "bg=colour235"
     set -g status-left-length 30
     set -g status-left '#[bg=colour234,fg=colour239] #(whoami)@#H [#S-#I-#P] #[default]'
 
@@ -108,23 +107,14 @@ in
     set -g status-right '#[bg=colour234,fg=colour239] Continuum: #{continuum_status} |  %Y-%m-%d | %I:%M '
 
     # Message
-    set -g message-bg blue
-    set -g message-fg white
-    set -g message-attr bright
+    set -g message-style "fg=white,bg=blue,bright"
 
-    # border
-    set -g pane-border-fg colour235
-    set -g pane-active-border-fg colour239
+    # Border
+    set -g pane-border-style "fg=colour235"
+    set -g pane-active-border-style "fg=colour239"
 
     # Don't automatically rename windows
     set -g automatic-rename off
-
-    # continuum settings
-    set -g @continuum-save-interval '15'
-
-    # resurrect settings
-    set -g @resurrect-dir '~/.local/share/tmux/resurrect'
-    set -g @resurrect-capture-pane-contents 'on'
 
     # set up alias for turning on logging
     bind P pipe-pane 'exec cat >>~/tmux-#W.log' \; display-message "Toggled logging to ~/tmux-#W.log"

@@ -15,14 +15,6 @@ RESULT="$(readlink -f ./result)"
 
 echo "${YELLOW}Switching to new generation...${NC}"
 sudo nix-env --profile /nix/var/nix/profiles/system --set "$RESULT"
-if [[ -r "${SSL_CERT_FILE_PATH}" ]]; then
-  sudo env \
-    NIX_SSL_CERT_FILE="${SSL_CERT_FILE_PATH}" \
-    SSL_CERT_FILE="${SSL_CERT_FILE_PATH}" \
-    NIX_CONFIG="ssl-cert-file = ${SSL_CERT_FILE_PATH}" \
-    "$RESULT/activate"
-else
-  sudo "$RESULT/activate"
-fi
+sudo "$RESULT/activate"
 
 echo "${GREEN}Switch to new generation complete!${NC}"

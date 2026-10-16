@@ -31,15 +31,7 @@ echo "${YELLOW}Switching to new generation...${NC}"
 # Activate directly from the pre-built result, bypassing flake re-evaluation.
 # darwin-rebuild switch does exactly: nix-env --set the profile, then run activate.
 sudo nix-env --profile /nix/var/nix/profiles/system --set "$RESULT"
-if [[ -r "${SSL_CERT_FILE_PATH}" ]]; then
-  sudo env \
-    NIX_SSL_CERT_FILE="${SSL_CERT_FILE_PATH}" \
-    SSL_CERT_FILE="${SSL_CERT_FILE_PATH}" \
-    NIX_CONFIG="ssl-cert-file = ${SSL_CERT_FILE_PATH}" \
-    "$RESULT/activate"
-else
-  sudo "$RESULT/activate"
-fi
+sudo "$RESULT/activate"
 
 if [[ "$keep_result" == true ]]; then
   echo "${YELLOW}Keeping result symlink...${NC}"
