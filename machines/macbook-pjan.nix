@@ -16,15 +16,6 @@
     casks = [ ];
   };
 
-  # Machine-specific darwin modules applied to all users on this machine.
-  darwin.extraModules = [
-    (
-      { ... }:
-      {
-      }
-    )
-  ];
-
   # Machine-specific home-manager modules applied to all users on this machine.
   home.extraModules = [
     (
@@ -32,6 +23,10 @@
       {
         home.packages = [ pkgs.salesforce-cli ];
         programs.zsh.shellAliases.zed = lib.mkForce "/Applications/Zed.app/Contents/MacOS/cli -n";
+
+        ai.mcpServers.glean = {
+          url = "https://circle-be.glean.com/mcp/default";
+        };
       }
     )
   ];

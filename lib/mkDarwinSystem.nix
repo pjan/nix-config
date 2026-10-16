@@ -17,11 +17,16 @@ let
   userModules = import ../users;
 
   # Per-user home-manager configuration: import the user module for each
-  # username listed in vars.machine.users.
+  # username listed in vars.machine.users, merging in any machine-specific
+  # per-user modules from vars.home.userModules.<username>.
+  perUserMachineModules = vars.home.userModules or { };
+
   homeManagerUsers = builtins.listToAttrs (
     map (username: {
       name = username;
-      value = import userModules.${username};
+      value = {
+        imports = [ userModules.${username} ] ++ (perUserMachineModules.${username} or [ ]);
+      };
     }) vars.machine.users
   );
 

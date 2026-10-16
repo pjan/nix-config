@@ -21,7 +21,8 @@
     settings.user.name = "Nao Vandaele";
   };
 
-  imports =
-    lib.filter (n: lib.strings.hasSuffix ".nix" n) (lib.filesystem.listFilesRecursive ./modules);
+  imports = lib.filter (n: lib.strings.hasSuffix ".nix" n) (
+    lib.filesystem.listFilesRecursive ./modules
+  );
 
 }

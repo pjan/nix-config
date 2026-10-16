@@ -207,7 +207,8 @@
           machineFiles = builtins.filter (n: nixpkgs.lib.hasSuffix ".nix" n) (
             builtins.attrNames (builtins.readDir ./machines)
           );
-          mkConfig = filename:
+          mkConfig =
+            filename:
             let
               path = ./machines + "/${filename}";
               vars = import path;
