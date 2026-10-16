@@ -12,6 +12,10 @@
 
   nix.sslCertFile = null;
 
-  brew.enable = false;
-  brew.cleanup = "zap";
+  brew = {
+    enable = false;
+    cleanup = "zap";
+    brews = [ ];
+    casks = [ ];
+  };
 }

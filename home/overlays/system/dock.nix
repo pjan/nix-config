@@ -97,7 +97,7 @@ in
           echo >&2 "Resetting Dock."
           ${dockutil}/bin/dockutil --no-restart --remove all
           ${createEntries}
-          killall Dock
+          /usr/bin/killall Dock
         else
           echo >&2 "Dock setup complete."
         fi

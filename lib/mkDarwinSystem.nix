@@ -51,6 +51,7 @@ inputs.darwin.lib.darwinSystem {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
       home-manager.extraSpecialArgs = { inherit inputs vars; };
+      home-manager.backupFileExtension = "hm-backup";
 
       # Shared home-manager modules — every user gets these.
       home-manager.sharedModules = [

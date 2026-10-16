@@ -16,6 +16,14 @@ let
   cleanup = vars.brew.cleanup;
   userName = vars.machine.primaryUser;
 
+  # Shared brews/casks (common across all machines).
+  sharedBrews = import ./brews.nix { };
+  sharedCasks = import ./casks.nix { };
+
+  # Machine-specific brews/casks (defined in machines/<hostname>.nix).
+  machineBrews = vars.brew.brews or [ ];
+  machineCasks = vars.brew.casks or [ ];
+
 in
 lib.mkIf brewEnabled {
 
@@ -44,9 +52,8 @@ lib.mkIf brewEnabled {
       inherit cleanup;
     };
 
-    # taps = [ "homebrew/services" "macos-fuse-t/homebrew-cask" ];
-    brews = pkgs.callPackage ./brews.nix { };
-    casks = pkgs.callPackage ./casks.nix { };
+    brews = sharedBrews ++ machineBrews;
+    casks = sharedCasks ++ machineCasks;
 
   };
 

@@ -9,8 +9,12 @@
 
   nix.sslCertFile = "/etc/nix/ca-bundle.crt";
 
-  brew.enable = false;
-  brew.cleanup = "zap";
+  brew = {
+    enable = false;
+    cleanup = "zap";
+    brews = [ ];
+    casks = [ ];
+  };
 
   # Machine-specific darwin modules applied to all users on this machine.
   darwin.extraModules = [
