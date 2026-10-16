@@ -66,6 +66,16 @@
         group = "staff";
       };
 
+      # Atlas NAS SSH key. Decrypted to ~/.ssh so the SSH config can reference it.
+      "atlas-ssh-key" = {
+        symlink = true;
+        path = "${config.home.homeDirectory}/.ssh/id_ed25519_atlas";
+        file = "${secrets}/atlas-ssh-key.age";
+        mode = "600";
+        owner = "${config.user.username}";
+        group = "staff";
+      };
+
       # aria2 RPC secret token. Stays at the default path
       # (/run/agenix/aria2-rpc-secret); read by darwin/modules/aria2.nix.
       "aria2-rpc-secret" = {

@@ -24,6 +24,13 @@
       IdentityFile = "${config.home.homeDirectory}/.ssh/github.pub";
     };
 
+    settings."atlas atlas.vandaele.io" = {
+      Hostname = "192.168.2.200";
+      User = "pjan";
+      IdentitiesOnly = true;
+      IdentityFile = "${config.home.homeDirectory}/.ssh/id_ed25519_atlas";
+    };
+
   };
 
 }
