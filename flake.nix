@@ -8,7 +8,7 @@
       inputs.systems.follows = "systems";
     };
     nixpkgs = {
-      url = "github:nixos/nixpkgs/nixos-unstable";
+      url = "github:nixos/nixpkgs/nixpkgs-unstable";
     };
     systems = {
       url = "github:nix-systems/default";
