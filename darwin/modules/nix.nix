@@ -20,18 +20,21 @@ in
       ];
       trusted-users = [
         "@admin"
-        "${config.user.username}"
+      ];
+      secret-key-files = [
+        "/etc/nix/secret-key"
       ];
       substituters = [
-        "https://cache.nixos.org"
         "https://nix-community.cachix.org"
         "s3://io-vandaele-nix-cache?endpoint=https://storage.googleapis.com&profile=gcp"
       ];
       trusted-public-keys = [
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         "io-vandaele-nix-cache:O9fdSbSnySVmQFa353NjmU/lP5GifyVfOmDM2XhBs8Q="
       ];
+      warn-dirty = false;
+      keep-outputs = true;
+      keep-derivations = true;
     }
     // lib.optionalAttrs (sslCertFile != null) {
       ssl-cert-file = sslCertFile;
@@ -58,5 +61,7 @@ in
     };
 
   };
+
+  nix.channel.enable = false;
 
 }

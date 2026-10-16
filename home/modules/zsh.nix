@@ -125,13 +125,7 @@
             return 1
           fi
 
-          local -a nix_args
-          nix_args=()
-          if [ -r /etc/nix/ca-bundle.crt ]; then
-            nix_args+=(--option ssl-cert-file /etc/nix/ca-bundle.crt)
-          fi
-
-          NIX_PATH="nixpkgs=flake:nixpkgs" nix-shell "''${nix_args[@]}" -p "$@" --command 'exec zsh -l'
+          NIX_PATH="nixpkgs=flake:nixpkgs" nix-shell -p "$@" --command 'exec zsh -l'
         }
 
         # nix develop always starts bash; start this shell's zsh binary instead

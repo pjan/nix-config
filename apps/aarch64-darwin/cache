@@ -19,7 +19,6 @@ if [[ ! -L ./result ]]; then
 fi
 
 echo "${YELLOW}Storing result in remote cache...${NC}"
-nix "${nix_args[@]}" store sign --recursive -k /etc/nix/secret-key "$(readlink ./result)"
 nix "${nix_args[@]}" copy --to "s3://io-vandaele-nix-cache?endpoint=https://storage.googleapis.com&profile=gcp" "$(readlink result)"
 
 echo "${GREEN}Copy to cache complete!${NC}"

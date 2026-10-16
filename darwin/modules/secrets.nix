@@ -32,22 +32,11 @@
         mode = "600";
       };
 
-      "etc_nix_public-key" = {
-        symlink = true;
-        path = "/etc/nix/public-key";
-        file = "${secrets}/etc_nix_public-key.age";
-        mode = "644";
-        owner = "${config.user.username}";
-        group = "staff";
-      };
-
       "etc_nix_secret-key" = {
         symlink = true;
         path = "/etc/nix/secret-key";
         file = "${secrets}/etc_nix_secret-key.age";
         mode = "600";
-        owner = "${config.user.username}";
-        group = "staff";
       };
 
       "rclone-service-account-io-vandaele" = {
