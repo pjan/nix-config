@@ -16,7 +16,7 @@ let
     types
     ;
 
-  cfg = config.system.defaults.dock.apps;
+  cfg = config.dock.apps;
 
   inherit (pkgs) dockutil;
 
@@ -24,12 +24,12 @@ in
 {
 
   options = {
-    system.defaults.dock.apps.enable = mkOption {
+    dock.apps.enable = mkOption {
       description = "Enable app management for dock";
       default = false;
     };
 
-    system.defaults.dock.apps.entries = mkOption {
+    dock.apps.entries = mkOption {
       description = "Entries on the Dock";
       type = types.listOf (
         types.submodule {
@@ -52,7 +52,6 @@ in
 
   config = mkIf cfg.enable (
     let
-      username = config.user.username;
       normalize = path: if hasSuffix ".app" path then path + "/" else path;
       entryURI =
         path:
@@ -91,9 +90,8 @@ in
       ) cfg.entries;
     in
     {
-      system.activationScripts.postActivation.text = ''
-        echo >&2 "Setting up the Dock for ${username}..."
-        sudo -u ${username} ${pkgs.zsh}/bin/zsh <<'USERBLOCK'
+      home.activation.dock = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        echo >&2 "Setting up the Dock..."
         haveURIs="$(${dockutil}/bin/dockutil --list | ${pkgs.coreutils}/bin/cut -f2)"
         if ! diff -wu <(echo -n "$haveURIs") <(echo -n '${wantURIs}') >&2 ; then
           echo >&2 "Resetting Dock."
@@ -103,7 +101,6 @@ in
         else
           echo >&2 "Dock setup complete."
         fi
-        USERBLOCK
       '';
     }
   );

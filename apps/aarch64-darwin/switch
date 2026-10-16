@@ -14,7 +14,7 @@ fi
 RESULT="$(readlink -f ./result)"
 
 echo "${YELLOW}Switching to new generation...${NC}"
-sudo nix-env --profile /nix/var/nix/profiles/system --set "$RESULT"
-sudo "$RESULT/activate"
+sudo -H nix-env --profile /nix/var/nix/profiles/system --set "$RESULT"
+sudo -H "$RESULT/activate"
 
 echo "${GREEN}Switch to new generation complete!${NC}"

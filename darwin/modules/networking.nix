@@ -12,14 +12,13 @@ in
 {
 
   networking = {
-    localHostName = vars.networking.localHostName;
+    localHostName = vars.machine.localHostName;
     knownNetworkServices = [ "Wi-Fi" ];
-    # [] = DNS from DHCP/VPN. Set fixed servers per machine with networking.dns in config.nix;
-    # `or` keeps machines whose config.nix predates the setting evaluating.
-    dns = vars.networking.dns or [ ];
+    # [] = DNS from DHCP/VPN. Set fixed servers per machine in machines/<hostname>.nix.
+    dns = vars.machine.dns or [ ];
   }
-  // lib.optionalAttrs (vars.networking.hostName != null && vars.networking.hostName != "") {
-    hostName = vars.networking.hostName;
+  // lib.optionalAttrs (vars.machine.hostname != null && vars.machine.hostname != "") {
+    hostName = vars.machine.hostname;
   };
 
 }

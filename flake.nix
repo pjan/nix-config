@@ -102,8 +102,6 @@
     }@inputs:
     let
 
-      vars = import ./config.nix;
-
       system = "aarch64-darwin";
 
       overlays =
@@ -125,6 +123,8 @@
           ];
         in
         importOverlays ++ flakeOverlays;
+
+      mkDarwinSystem = import ./lib/mkDarwinSystem.nix { inherit inputs overlays; };
 
       devShell =
         let
@@ -201,32 +201,23 @@
         "switch" = mkApp "switch";
       };
 
-      darwinConfigurations.${system} = darwin.lib.darwinSystem {
-        inherit system;
-        specialArgs = {
-          inherit inputs overlays vars;
-          inherit (inputs)
-            homebrew-bundle
-            homebrew-core
-            homebrew-cask
-            homebrew-subtlesoft
-            ;
-          secrets = inputs.secrets;
-        };
-        modules = [
-          home-manager.darwinModules.home-manager
-          {
-            home-manager.sharedModules = [
-              inputs.riptide.homeManagerModules.default
-            ];
-          }
-          nix-homebrew.darwinModules.nix-homebrew
-          agenix.darwinModules.default
-          ./darwin # load the nix-darwin configuration
-          ./home # load the home-manager configuration
-          ./brew # load the nix-homebrew configuration
-        ];
-      };
+      # Auto-discover machine configs from machines/*.nix, keyed by localHostName.
+      darwinConfigurations =
+        let
+          machineFiles = builtins.filter (n: nixpkgs.lib.hasSuffix ".nix" n) (
+            builtins.attrNames (builtins.readDir ./machines)
+          );
+          mkConfig = filename:
+            let
+              path = ./machines + "/${filename}";
+              vars = import path;
+            in
+            {
+              name = vars.machine.localHostName;
+              value = mkDarwinSystem path;
+            };
+        in
+        builtins.listToAttrs (map mkConfig machineFiles);
 
     };
 

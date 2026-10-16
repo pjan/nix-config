@@ -12,8 +12,35 @@ permissions:
   contents: read
 
 jobs:
+  discover:
+    name: Discover hosts
+    runs-on: ubuntu-24.04
+    outputs:
+      hosts: ${{ steps.hosts.outputs.hosts }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+
+      - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+        with:
+          install_url: https://releases.nixos.org/nix/nix-2.34.8/install
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+      - id: hosts
+        run: |
+          hosts=$(nix eval '.#darwinConfigurations' --apply builtins.attrNames --json \
+            --override-input secrets 'path:./ci/secrets-stub')
+          echo "hosts=$hosts" >> "$GITHUB_OUTPUT"
+
   build-cache:
+    name: Build ${{ matrix.host }}
+    needs: discover
     runs-on: macos-15
+    strategy:
+      fail-fast: false
+      matrix:
+        host: ${{ fromJson(needs.discover.outputs.hosts) }}
     env:
       NIXPKGS_ALLOW_UNFREE: "1"
       AWS_REQUEST_CHECKSUM_CALCULATION: when_required
@@ -41,9 +68,6 @@ jobs:
             extra-substituters = s3://io-vandaele-nix-cache?endpoint=https://storage.googleapis.com&profile=gcp
             extra-trusted-public-keys = io-vandaele-nix-cache:O9fdSbSnySVmQFa353NjmU/lP5GifyVfOmDM2XhBs8Q=
 
-      - name: Apply CI config stub
-        run: cp ci/config-stub.nix config.nix
-
       - name: Write GCS credentials
         env:
           GCS_KEY_ID: ${{ secrets.GCS_HMAC_ACCESS_KEY_ID }}
@@ -53,14 +77,13 @@ jobs:
           printf '[gcp]\naws_access_key_id = %s\naws_secret_access_key = %s\n' \
             "$GCS_KEY_ID" "$GCS_SECRET" > "$RUNNER_TEMP/gcs-credentials"
           echo "AWS_SHARED_CREDENTIALS_FILE=$RUNNER_TEMP/gcs-credentials" >> "$GITHUB_ENV"
-          # The nix daemon substitutes as root and does not see the env above.
           sudo mkdir -p /var/root/.aws
           sudo install -m 600 "$RUNNER_TEMP/gcs-credentials" /var/root/.aws/credentials
 
       - name: Build darwin configuration
         run: |
           # --max-jobs 1: parallel builds exhaust runner memory (chrome-devtools-mcp tsc).
-          nix build '.#darwinConfigurations.aarch64-darwin.system' \
+          nix build '.#darwinConfigurations.${{ matrix.host }}.system' \
             --override-input secrets 'path:./ci/secrets-stub' \
             --max-jobs 1 \
             --print-build-logs

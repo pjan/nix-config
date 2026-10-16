@@ -11,25 +11,10 @@ permissions:
 
 jobs:
   update:
-    # Full build on macOS and push to the GCS cache before opening the PR, so a PR
-    # only exists when the system builds and merging it gives instant cache hits.
+    name: Update flake.lock
     runs-on: macos-15
-    env:
-      NIXPKGS_ALLOW_UNFREE: "1"
-      AWS_REQUEST_CHECKSUM_CALCULATION: when_required
-      AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
-
-      - name: Free disk space
-        run: |
-          # macOS runners ship with Xcode simulators and other tooling we don't need.
-          sudo rm -rf /Library/Developer/CoreSimulator/Profiles/Runtimes/ || true
-          sudo rm -rf ~/Library/Developer/CoreSimulator/ || true
-          sudo rm -rf /Applications/Xcode_*.app || true
-          sudo rm -rf /opt/homebrew/share/dotnet/ || true
-          sudo rm -rf /opt/homebrew/opt/mono/ || true
-          df -h /
 
       - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
         with:
@@ -37,8 +22,6 @@ jobs:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
-            extra-substituters = s3://io-vandaele-nix-cache?endpoint=https://storage.googleapis.com&profile=gcp
-            extra-trusted-public-keys = io-vandaele-nix-cache:O9fdSbSnySVmQFa353NjmU/lP5GifyVfOmDM2XhBs8Q=
 
       - name: Update flake inputs (excluding homebrew taps)
         run: |
@@ -55,8 +38,76 @@ jobs:
             riptide \
             systems
 
-      - name: Apply CI config stub
-        run: cp ci/config-stub.nix config.nix
+      - name: Upload updated flake.lock
+        uses: actions/upload-artifact@v4
+        with:
+          name: flake-lock
+          path: flake.lock
+
+  discover:
+    name: Discover hosts
+    needs: update
+    runs-on: ubuntu-24.04
+    outputs:
+      hosts: ${{ steps.hosts.outputs.hosts }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+
+      - name: Download updated flake.lock
+        uses: actions/download-artifact@v4
+        with:
+          name: flake-lock
+
+      - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+        with:
+          install_url: https://releases.nixos.org/nix/nix-2.34.8/install
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+      - id: hosts
+        run: |
+          hosts=$(nix eval '.#darwinConfigurations' --apply builtins.attrNames --json \
+            --override-input secrets 'path:./ci/secrets-stub')
+          echo "hosts=$hosts" >> "$GITHUB_OUTPUT"
+
+  build-cache:
+    name: Build ${{ matrix.host }}
+    needs: discover
+    runs-on: macos-15
+    strategy:
+      fail-fast: false
+      matrix:
+        host: ${{ fromJson(needs.discover.outputs.hosts) }}
+    env:
+      NIXPKGS_ALLOW_UNFREE: "1"
+      AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+      AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+
+      - name: Download updated flake.lock
+        uses: actions/download-artifact@v4
+        with:
+          name: flake-lock
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf /Library/Developer/CoreSimulator/Profiles/Runtimes/ || true
+          sudo rm -rf ~/Library/Developer/CoreSimulator/ || true
+          sudo rm -rf /Applications/Xcode_*.app || true
+          sudo rm -rf /opt/homebrew/share/dotnet/ || true
+          sudo rm -rf /opt/homebrew/opt/mono/ || true
+          df -h /
+
+      - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+        with:
+          install_url: https://releases.nixos.org/nix/nix-2.34.8/install
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+            extra-substituters = s3://io-vandaele-nix-cache?endpoint=https://storage.googleapis.com&profile=gcp
+            extra-trusted-public-keys = io-vandaele-nix-cache:O9fdSbSnySVmQFa353NjmU/lP5GifyVfOmDM2XhBs8Q=
 
       - name: Write GCS credentials
         env:
@@ -67,14 +118,12 @@ jobs:
           printf '[gcp]\naws_access_key_id = %s\naws_secret_access_key = %s\n' \
             "$GCS_KEY_ID" "$GCS_SECRET" > "$RUNNER_TEMP/gcs-credentials"
           echo "AWS_SHARED_CREDENTIALS_FILE=$RUNNER_TEMP/gcs-credentials" >> "$GITHUB_ENV"
-          # The nix daemon substitutes as root and does not see the env above.
           sudo mkdir -p /var/root/.aws
           sudo install -m 600 "$RUNNER_TEMP/gcs-credentials" /var/root/.aws/credentials
 
       - name: Build darwin configuration with updated inputs
         run: |
-          # --max-jobs 1: parallel builds exhaust runner memory.
-          nix build '.#darwinConfigurations.aarch64-darwin.system' \
+          nix build '.#darwinConfigurations.${{ matrix.host }}.system' \
             --override-input secrets 'path:./ci/secrets-stub' \
             --max-jobs 1 \
             --print-build-logs
@@ -98,38 +147,6 @@ jobs:
             --to "s3://io-vandaele-nix-cache?endpoint=https://storage.googleapis.com&profile=gcp" \
             "$(readlink ./result)"
 
-      - name: Capture lock diff
-        run: |
-          {
-            echo "LOCK_DIFF<<EOF"
-            git diff flake.lock
-            echo "EOF"
-          } >> "$GITHUB_ENV"
-
-      - name: Open pull request if inputs changed
-        uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7.0.11
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          # Only the lock; config.nix is overwritten with the CI stub above.
-          add-paths: flake.lock
-          branch: update/flake-lock
-          commit-message: "chore(flake): update inputs"
-          title: "chore(flake): update inputs"
-          body: |
-            Automated weekly update of flake inputs (homebrew taps excluded).
-            Built on macOS and pushed to the GCS cache before this PR was opened.
-
-            <details>
-            <summary>flake.lock diff</summary>
-
-            ```
-            ${{ env.LOCK_DIFF }}
-            ```
-
-            </details>
-          labels: "dependencies"
-          delete-branch: true
-
       - name: Cleanup
         if: always()
         run: |
@@ -137,3 +154,29 @@ jobs:
           rm -f "$RUNNER_TEMP/nix-signing-key"
           rm -f "${AWS_SHARED_CREDENTIALS_FILE:-$RUNNER_TEMP/gcs-credentials}"
           sudo rm -f /var/root/.aws/credentials
+
+  open-pr:
+    name: Open PR
+    needs: build-cache
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+
+      - name: Download updated flake.lock
+        uses: actions/download-artifact@v4
+        with:
+          name: flake-lock
+
+      - name: Open pull request if inputs changed
+        uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676 # v7.0.11
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          add-paths: flake.lock
+          branch: update/flake-lock
+          commit-message: "chore(flake): update inputs"
+          title: "chore(flake): update inputs"
+          body: |
+            Automated weekly update of flake inputs (homebrew taps excluded).
+            Built on macOS and pushed to the GCS cache before this PR was opened.
+          labels: "dependencies"
+          delete-branch: true

@@ -1,5 +1,0 @@
-# Formatting-only commits, skipped by `git blame` (GitHub applies this automatically;
-# locally: git config blame.ignoreRevsFile .git-blame-ignore-revs).
-
-# style: format all Nix files with nixfmt (nix fmt)
-609789e2adef650d7f1a4bb162eb8394d33114f7

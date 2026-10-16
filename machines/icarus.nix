@@ -1,0 +1,17 @@
+{
+  machine.hostname = null;
+  machine.localHostName = "Icarus";
+  machine.computerName = "Icarus";
+  machine.dns = [ ];
+
+  machine.primaryUser = "pjan";
+  machine.users = [
+    "pjan"
+    "nao"
+  ];
+
+  nix.sslCertFile = null;
+
+  brew.enable = false;
+  brew.cleanup = "zap";
+}

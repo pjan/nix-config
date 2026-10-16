@@ -2,31 +2,15 @@
   config,
   lib,
   pkgs,
-  vars,
   ...
 }:
 
-let
-
-  gitName = vars.user.gitName;
-  gitEmail = vars.user.email;
-  sslCertFile = vars.nix.sslCertFile;
-
-  # Public half of the "Github (pjan)" SSH key in 1Password; signs commits and tags.
-  signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK0L6BtkYnTzCxl5L2UlPsp18Im68t0mLE56NhZQZMWK";
-
-in
 {
 
   programs.git = {
     enable = true;
 
     settings = {
-      user = {
-        name = "${gitName}";
-        email = "${gitEmail}";
-      };
-
       alias = {
         # Commit all changes
         ac = "!git add -A && git commit -av";
@@ -101,7 +85,7 @@ in
         r = "remote";
 
         # Remove branches that have already been merged with master
-        # a.k.a. ‘delete merged’
+        # a.k.a. 'delete merged'
         rdm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d";
 
         # Interactive rebase with the given number of latest commits
@@ -136,7 +120,6 @@ in
       };
 
       apply.whitespace = "fix";
-      credential.helper = "osxkeychain";
       help.autocorrect = 1;
       pull.rebase = true;
       rebase.autosquash = true;
@@ -204,16 +187,8 @@ in
         stat = true;
       };
 
-      http = {
-        # Same CA bundle as Nix (includes corporate roots, e.g. Zscaler) when configured.
-        sslCAinfo =
-          if sslCertFile != null then sslCertFile else "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
-        sslverify = true;
-      };
-
       push = {
         default = "tracking";
-        # recurseSubmodules = "check";
       };
 
       # gh:/gst: fetch and push over SSH; github:/gist: fetch over HTTPS, push over SSH.
@@ -265,19 +240,6 @@ in
     ];
 
     lfs.enable = true;
-
-    # Sign with the SSH key in 1Password (Touch ID per signature); op-ssh-sign talks to the app
-    # directly, independent of SSH_AUTH_SOCK/IdentityAgent.
-    signing = {
-      format = "ssh";
-      key = signingKey;
-      signer = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
-      signByDefault = true;
-      # Lets `git log --show-signature` / `git verify-commit` verify locally.
-      allowedSigners = ''
-        ${gitEmail} namespaces="git" ${signingKey}
-      '';
-    };
 
   };
 

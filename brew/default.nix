@@ -14,7 +14,7 @@ let
 
   brewEnabled = vars.brew.enable;
   cleanup = vars.brew.cleanup;
-  userName = vars.user.username;
+  userName = vars.machine.primaryUser;
 
 in
 lib.mkIf brewEnabled {

@@ -32,20 +32,6 @@ in
       static-only = false;
       tilesize = 36;
       wvous-bl-corner = 2;
-
-      apps = {
-        enable = true;
-        entries = [
-          { path = "/Applications/iTerm.app/"; }
-          { path = "/Applications/TIDAL.app/"; }
-          { path = "/Applications/Google Chrome.app/"; }
-          {
-            path = "${config.home.homeDirectory}/Downloads";
-            section = "others";
-            options = "--sort dateadded --view grid --display stack";
-          }
-        ];
-      };
     };
 
     finder = {
