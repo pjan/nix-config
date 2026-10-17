@@ -8,5 +8,6 @@ pkgs.buildEnv {
     codex
     chrome-devtools-mcp
     playwright-mcp
+    rea-agents
   ];
 }
