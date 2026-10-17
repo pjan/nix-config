@@ -3,5 +3,5 @@ _:
 [
   # "pinentry-mac"
   "syncthing"
-  "android-platform-tools"
+  # "android-platform-tools"
 ]

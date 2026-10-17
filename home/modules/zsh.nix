@@ -93,7 +93,8 @@
 
       # make a directory and cd into it
       mkd = "_mkd";
-
+    }
+    // lib.optionalAttrs config.editor.zed.enable {
       # open zeditor
       zed = "${pkgs.zed-editor}/bin/zeditor";
       code = "zed";

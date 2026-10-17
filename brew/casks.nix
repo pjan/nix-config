@@ -31,16 +31,16 @@ _:
   "the-unarchiver"
 
   # Media Tools
-  "calibre"
+  # "calibre"
   "iina"
-  "midipipe"
+  # "midipipe"
   "roon"
   "tidal"
   "xld"
-  "yacreader"
+  # "yacreader"
 
   # Productivity Tools
-  "alacritty"
+  # "alacritty"
   "alfred"
   "hyperkey"
   "jordanbaird-ice"
