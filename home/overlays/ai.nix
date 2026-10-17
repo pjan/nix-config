@@ -64,8 +64,9 @@ in
       default = { };
       description = ''
         Skills shared between Claude Code and Codex.
-        Each entry is a skill name mapped to either inline content (string)
-        or a path to a skill directory/file.
+        Each entry is a skill name mapped to either inline SKILL.md content
+        or a path (or store-path string, e.g. a package's skill directory)
+        to a skill directory/file.
       '';
       example = {
         rust = "/path/to/rust-skill";
@@ -86,16 +87,9 @@ in
     # Codex: map bearerTokenEnvVar → bearer_token_env_var.
     programs.codex.settings.mcp_servers = lib.mapAttrs toCodexMcp cfg.mcpServers;
 
-    # Claude Code: skills via the native HM option.
+    # Skills via the native HM options (~/.claude/skills/<name>/, ~/.codex/skills/<name>/).
     programs.claude-code.skills = cfg.skills;
-
-    # Codex: skills as files in ~/.codex/skills/<name>/.
-    home.file = lib.mapAttrs' (
-      name: content:
-      lib.nameValuePair ".codex/skills/${name}/AGENTS.md" (
-        if builtins.isPath content then { source = content; } else { text = content; }
-      )
-    ) cfg.skills;
+    programs.codex.skills = cfg.skills;
 
   };
 

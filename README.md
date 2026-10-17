@@ -391,6 +391,7 @@ Codex gets `bearerTokenEnvVar` renamed to `bearer_token_env_var`. Stdio servers
 ```nix
 ai.skills = {
   rust = ./skills/rust;          # path to a skill directory
+  reverse-engineer-anything = pkgs.rea-agents.skill;  # skill shipped with a package
   pdf = ''
     # PDF Processing
     Use pdfplumber to extract text from PDFs.
@@ -398,8 +399,8 @@ ai.skills = {
 };
 ```
 
-Skills are deployed to `~/.claude/skills/` (via `programs.claude-code.skills`)
-and `~/.codex/skills/<name>/AGENTS.md` (via `home.file`).
+Skills are deployed to `~/.claude/skills/<name>/` and `~/.codex/skills/<name>/`
+(via the native `programs.claude-code.skills` / `programs.codex.skills` options).
 
 ### GitHub MCP server for Claude Code
 

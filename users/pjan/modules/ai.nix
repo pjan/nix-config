@@ -21,6 +21,17 @@
       command = "npx";
       args = [ "-y" "@upstash/context7-mcp" ];
     };
+    # REA: reverse engineering (native binaries via Hopper, JS/Electron, .NET, web).
+    rea = {
+      command = "${pkgs.rea-agents}/bin/rea";
+      args = [ "mcp" ];
+    };
+  };
+
+  # Shared skills (both Claude Code and Codex).
+  ai.skills = {
+    # Bundled with the package, so it always matches the MCP server's version.
+    reverse-engineer-anything = pkgs.rea-agents.skill;
   };
 
   # Claude Code configuration.
@@ -74,6 +85,11 @@
       model_reasoning_effort = "high";
       approvals_reviewer = "user";
       service_tier = "default";
+      # REA's own setup adds these: Ghidra/Hopper startup can take minutes.
+      mcp_servers.rea = {
+        startup_timeout_sec = 30;
+        tool_timeout_sec = 450;
+      };
     };
   };
 
