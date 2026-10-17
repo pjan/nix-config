@@ -8,12 +8,9 @@
 
   programs.zed-editor = lib.mkIf config.editor.zed.enable {
 
-    enable = true;
-
-    # null on machines where Zed comes from the brew cask (see machines/apollo.nix).
+    # null on machines where Zed comes from the brew cask (see editor.zed overlay).
     inherit (config.editor.zed) package;
 
-    # Installed on startup if missing; never uninstalled.
     extensions = [
       "ayu-darker"
       "catppuccin-icons"
@@ -25,21 +22,27 @@
       "toml"
     ];
 
-    # Merged into ~/.config/zed/settings.json on activation (mutableUserSettings
-    # defaults to true): settings changed in Zed survive, but the values below
-    # win on every switch. Keep volatile, UI-driven settings (agent model etc.)
-    # out of here.
     userSettings = {
       theme = {
-        mode = "system";
-        light = "Nord Light";
-        dark = "Ayu Mirage";
+        mode = "dark";
+        light = "Ayu Light";
+        dark = "Nord Dark";
       };
-      ui_font_size = 16;
-      buffer_font_size = 12;
-      buffer_font_family = "Hack Nerd Font";
+      icon_theme = {
+        mode = "dark";
+        light = "Zed (Default)";
+        dark = "Zed (Default)";
+      };
+      ui_font_family = "Noto Sans";
+      ui_font_size = 14.0;
+      buffer_font_family = "Hack Nerd Font Mono";
+      buffer_font_size = 12.0;
       buffer_font_features.calt = true;
-      terminal.dock = "bottom";
+      terminal = {
+        font_size = 12.0;
+        font_family = "Hack Nerd Font Mono";
+        dock = "bottom";
+      };
       git_panel.tree_view = true;
       direnv.enable = true;
     };
