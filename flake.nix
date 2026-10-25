@@ -202,7 +202,8 @@
       devShells.${system} = devShell;
 
       # `nix fmt`: nixfmt (official Nix style) over all tracked .nix files.
-      formatter.${system} = nixpkgs.legacyPackages.${system}.nixfmt-tree;
+      # Export for all systems so `nix fmt` works in CI on Linux as well.
+      formatter = nixpkgs.lib.genAttrs (import systems) (s: nixpkgs.legacyPackages.${s}.nixfmt-tree);
 
       apps.${system} = {
         "bootstrap" = bootstrapApp;
