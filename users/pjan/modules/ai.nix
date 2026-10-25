@@ -19,7 +19,10 @@
     };
     context7 = {
       command = "npx";
-      args = [ "-y" "@upstash/context7-mcp" ];
+      args = [
+        "-y"
+        "@upstash/context7-mcp"
+      ];
     };
     # REA: reverse engineering (native binaries via Hopper, JS/Electron, .NET, web).
     rea = {
@@ -40,7 +43,7 @@
     mutableSettings = true;
     settings = {
       env = {
-        PATH = "/etc/profiles/per-user/${config.home.username}/bin:${config.home.homeDirectory}/.nix-profile/bin:/usr/local/bin:/usr/bin:/bin";
+        PATH = "/etc/profiles/per-user/${config.home.username}/bin:${config.home.homeDirectory}/.nix-profile/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/bin";
       };
       permissions = {
         defaultMode = "auto";
