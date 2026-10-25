@@ -47,40 +47,42 @@ inputs.darwin.lib.darwinSystem {
       homebrew-cask
       homebrew-subtlesoft
       ;
-    secrets = inputs.secrets;
+    inherit (inputs) secrets;
   };
   modules = [
     # home-manager integration
     inputs.home-manager.darwinModules.home-manager
     {
-      home-manager.useGlobalPkgs = true;
-      home-manager.useUserPackages = true;
-      home-manager.extraSpecialArgs = { inherit inputs vars; };
-      home-manager.backupFileExtension = "hm-backup";
+      home-manager = {
+        useGlobalPkgs = true;
+        useUserPackages = true;
+        extraSpecialArgs = { inherit inputs vars; };
+        backupFileExtension = "hm-backup";
 
-      # Shared home-manager modules — every user gets these.
-      home-manager.sharedModules = [
-        # Export XDG environment variables (macOS doesn't set them).
-        (
-          { config, ... }:
-          {
-            home.sessionVariables = {
-              XDG_CACHE_HOME = config.xdg.cacheHome;
-              XDG_CONFIG_HOME = config.xdg.configHome;
-              XDG_DATA_HOME = config.xdg.dataHome;
-              XDG_STATE_HOME = config.xdg.stateHome;
-            };
-          }
-        )
-        # riptide home-manager module
-        inputs.riptide.homeManagerModules.default
-        # Home-manager option declarations (user.*, etc.)
-        ../home/overlays
-      ]
-      ++ sharedHomeModules
-      ++ (vars.home.extraModules or [ ]);
+        # Shared home-manager modules — every user gets these.
+        sharedModules = [
+          # Export XDG environment variables (macOS doesn't set them).
+          (
+            { config, ... }:
+            {
+              home.sessionVariables = {
+                XDG_CACHE_HOME = config.xdg.cacheHome;
+                XDG_CONFIG_HOME = config.xdg.configHome;
+                XDG_DATA_HOME = config.xdg.dataHome;
+                XDG_STATE_HOME = config.xdg.stateHome;
+              };
+            }
+          )
+          # riptide home-manager module
+          inputs.riptide.homeManagerModules.default
+          # Home-manager option declarations (user.*, etc.)
+          ../home/overlays
+        ]
+        ++ sharedHomeModules
+        ++ (vars.home.extraModules or [ ]);
 
-      home-manager.users = homeManagerUsers;
+        users = homeManagerUsers;
+      };
     }
 
     # nix-homebrew

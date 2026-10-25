@@ -10,9 +10,11 @@
 
 {
 
-  user.username = config.home.username;
-  user.fullName = "Pieterjan Vandaele";
-  user.email = "pjan@vandaele.io";
+  user = {
+    username = config.home.username;
+    fullName = "Pieterjan Vandaele";
+    email = "pjan@vandaele.io";
+  };
 
   home.stateVersion = "24.11";
   home.enableNixpkgsReleaseCheck = false;

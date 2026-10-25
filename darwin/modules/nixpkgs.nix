@@ -6,9 +6,6 @@
   ...
 }:
 
-let
-
-in
 {
 
   nixpkgs = {
@@ -18,7 +15,7 @@ in
 
       permittedInsecurePackages = [ ];
     };
-    overlays = overlays;
+    inherit overlays;
   };
 
 }

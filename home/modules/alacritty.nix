@@ -5,9 +5,6 @@
   ...
 }:
 
-let
-
-in
 {
 
   programs.alacritty = {

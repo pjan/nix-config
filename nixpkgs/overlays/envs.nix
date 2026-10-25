@@ -1,8 +1,5 @@
 self: super:
 
-let
-
-in
 {
 
   tools = {

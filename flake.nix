@@ -31,15 +31,23 @@
     };
     nix-pkgs = {
       url = "github:pjan/nix-pkgs";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
-      inputs.flake-utils.inputs.systems.follows = "systems";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils = {
+          follows = "flake-utils";
+          inputs.systems.follows = "systems";
+        };
+      };
     };
     codex-cli-nix = {
       url = "github:sadjow/codex-cli-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
-      inputs.flake-utils.inputs.systems.follows = "systems";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils = {
+          follows = "flake-utils";
+          inputs.systems.follows = "systems";
+        };
+      };
     };
     agenix = {
       url = "github:ryantm/agenix";
@@ -68,9 +76,13 @@
     # flake imports
     beatport-dl = {
       url = "github:pjan/beatport-dl";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
-      inputs.flake-utils.inputs.systems.follows = "systems";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        flake-utils = {
+          follows = "flake-utils";
+          inputs.systems.follows = "systems";
+        };
+      };
     };
     riptide = {
       url = "github:pjan/riptide";
@@ -138,6 +150,7 @@
                 bashInteractive
                 git
                 age
+                statix
                 agenix.packages.${system}.agenix
                 age-plugin-yubikey
               ];

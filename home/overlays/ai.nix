@@ -22,10 +22,7 @@ let
     let
       base = builtins.removeAttrs server sharedKeys;
       renamed = lib.filterAttrs (_: v: v != null) (
-        lib.mapAttrs' (
-          from: to:
-          lib.nameValuePair to (server.${from} or null)
-        ) codexRenames
+        lib.mapAttrs' (from: to: lib.nameValuePair to (server.${from} or null)) codexRenames
       );
     in
     base // renamed;
@@ -81,15 +78,19 @@ in
 
   config = lib.mkIf (cfg.mcpServers != { } || cfg.skills != { }) {
 
-    # Claude Code: pass MCP servers as-is (Claude accepts bearerTokenEnvVar natively).
-    programs.claude-code.mcpServers = cfg.mcpServers;
+    programs.claude-code = {
+      # Pass MCP servers as-is (Claude accepts bearerTokenEnvVar natively).
+      inherit (cfg) mcpServers;
+      # Skills via the native HM options (~/.claude/skills/<name>/).
+      inherit (cfg) skills;
+    };
 
-    # Codex: map bearerTokenEnvVar → bearer_token_env_var.
-    programs.codex.settings.mcp_servers = lib.mapAttrs toCodexMcp cfg.mcpServers;
-
-    # Skills via the native HM options (~/.claude/skills/<name>/, ~/.codex/skills/<name>/).
-    programs.claude-code.skills = cfg.skills;
-    programs.codex.skills = cfg.skills;
+    programs.codex = {
+      # Map bearerTokenEnvVar → bearer_token_env_var.
+      settings.mcp_servers = lib.mapAttrs toCodexMcp cfg.mcpServers;
+      # Skills via the native HM options (~/.codex/skills/<name>/).
+      inherit (cfg) skills;
+    };
 
   };
 

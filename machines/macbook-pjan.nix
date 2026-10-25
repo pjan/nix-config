@@ -1,11 +1,12 @@
 {
-  machine.hostname = null;
-  machine.localHostName = "L-FW3C6X79MN";
-  machine.computerName = "L-FW3C6X79MN";
-  machine.dns = [ ];
-
-  machine.primaryUser = "pieterjan.vandaele";
-  machine.users = [ "pieterjan.vandaele" ];
+  machine = {
+    hostname = null;
+    localHostName = "L-FW3C6X79MN";
+    computerName = "L-FW3C6X79MN";
+    dns = [ ];
+    primaryUser = "pieterjan.vandaele";
+    users = [ "pieterjan.vandaele" ];
+  };
 
   nix.sslCertFile = "/etc/nix/ca-bundle.crt";
 
@@ -19,7 +20,12 @@
   # Machine-specific home-manager modules applied to all users on this machine.
   home.extraModules = [
     (
-      { config, lib, pkgs, ... }:
+      {
+        config,
+        lib,
+        pkgs,
+        ...
+      }:
       {
         home.packages = [ pkgs.salesforce-cli ];
         programs.zsh.shellAliases.zed = lib.mkForce "/Applications/Zed.app/Contents/MacOS/cli -n";

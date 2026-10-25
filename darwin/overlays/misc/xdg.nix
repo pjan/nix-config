@@ -47,10 +47,12 @@ in
   };
 
   config = {
-    xdg.cacheHome = mkDefault defaultCacheHome;
-    xdg.configHome = mkDefault defaultConfigHome;
-    xdg.dataHome = mkDefault defaultDataHome;
-    xdg.stateHome = mkDefault defaultStateHome;
+    xdg = {
+      cacheHome = mkDefault defaultCacheHome;
+      configHome = mkDefault defaultConfigHome;
+      dataHome = mkDefault defaultDataHome;
+      stateHome = mkDefault defaultStateHome;
+    };
   };
 
 }

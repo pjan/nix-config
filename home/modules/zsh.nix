@@ -94,17 +94,15 @@
       # make a directory and cd into it
       mkd = "_mkd";
     }
-    // lib.optionalAttrs config.editor.zed.enable (
-      {
-        # open zeditor (nixpkgs), or the CLI bundled with Zed.app (brew cask)
-        zed =
-          if config.editor.zed.package != null then
-            "${config.editor.zed.package}/bin/zeditor"
-          else
-            "/Applications/Zed.app/Contents/MacOS/cli";
-        code = "zed";
-      }
-    );
+    // lib.optionalAttrs config.editor.zed.enable {
+      # open zeditor (nixpkgs), or the CLI bundled with Zed.app (brew cask)
+      zed =
+        if config.editor.zed.package != null then
+          "${config.editor.zed.package}/bin/zeditor"
+        else
+          "/Applications/Zed.app/Contents/MacOS/cli";
+      code = "zed";
+    };
 
     initContent = lib.mkMerge [
       # Powerlevel10k instant prompt: draw the cached prompt immediately and

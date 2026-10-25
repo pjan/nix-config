@@ -5,9 +5,6 @@
   ...
 }:
 
-let
-
-in
 {
 
   system.defaults = {

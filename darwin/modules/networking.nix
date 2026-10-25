@@ -6,9 +6,6 @@
   ...
 }:
 
-let
-
-in
 {
 
   networking = {

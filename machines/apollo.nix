@@ -1,11 +1,12 @@
 {
-  machine.hostname = null;
-  machine.localHostName = "apollo";
-  machine.computerName = "apollo";
-  machine.dns = [ ];
-
-  machine.primaryUser = "pjan";
-  machine.users = [ "pjan" ];
+  machine = {
+    hostname = null;
+    localHostName = "apollo";
+    computerName = "apollo";
+    dns = [ ];
+    primaryUser = "pjan";
+    users = [ "pjan" ];
+  };
 
   nix.sslCertFile = "/etc/nix/ca-bundle.crt";
 

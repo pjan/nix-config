@@ -1,0 +1,15 @@
+repos:
+  - repo: local
+    hooks:
+      - id: nixfmt
+        name: nixfmt
+        entry: nix fmt -- --fail-on-change
+        language: system
+        pass_filenames: false
+
+      - id: statix
+        name: statix
+        entry: statix check
+        language: system
+        pass_filenames: false
+        types: [file]

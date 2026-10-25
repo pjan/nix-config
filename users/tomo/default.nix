@@ -9,9 +9,11 @@
 
 {
 
-  user.username = config.home.username;
-  user.fullName = "Tomo Vandaele";
-  user.email = "";
+  user = {
+    username = config.home.username;
+    fullName = "Tomo Vandaele";
+    email = "";
+  };
 
   home.stateVersion = "24.11";
   home.enableNixpkgsReleaseCheck = false;
