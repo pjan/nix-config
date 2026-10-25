@@ -5,4 +5,5 @@
   "pieterjan.vandaele" = ./pjan;
   "pjan" = ./pjan;
   "nao" = ./nao;
+  "tomo" = ./tomo;
 }

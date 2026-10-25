@@ -8,6 +8,7 @@
   machine.users = [
     "pjan"
     "nao"
+    "tomo"
   ];
 
   nix.sslCertFile = null;
