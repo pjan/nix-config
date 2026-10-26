@@ -4,7 +4,7 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["\\.github/workflows/.*\\.yml$"],
+      "managerFilePatterns": ["/\\.github/workflows/.*\\.yml$/"],
       "matchStrings": [
         "https://releases\\.nixos\\.org/nix/nix-(?<currentValue>[\\d.]+)/install"
       ],

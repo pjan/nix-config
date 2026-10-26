@@ -165,6 +165,8 @@ jobs:
         with:
           configurationFile: .github/renovate.json
           token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          RENOVATE_REPOSITORIES: ${{ github.repository }}
 
   open-pr:
     name: Open PR
