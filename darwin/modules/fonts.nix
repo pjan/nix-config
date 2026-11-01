@@ -18,6 +18,7 @@
       meslo-lgs-nf
       twemoji-color-font
       nerd-fonts.hack
+      sketchybar-app-font
     ];
   };
 
