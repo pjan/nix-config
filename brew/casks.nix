@@ -4,7 +4,6 @@ _:
   # Development Tools
   "insomnia"
   "iterm2"
-  "ngrok"
   "tableplus"
   "visual-studio-code"
   "wireshark-app"
@@ -22,17 +21,14 @@ _:
 
   # Utility Tools
   "1password"
-  "1password-cli"
   # "cryptomator"
   "google-drive"
   "gpg-suite"
   # "fuse-t"
   "syncthing-app"
-  "the-unarchiver"
 
   # Media Tools
   # "calibre"
-  "iina"
   # "midipipe"
   "roon"
   "tidal"
@@ -41,13 +37,9 @@ _:
 
   # Productivity Tools
   # "alacritty"
-  "alfred"
   "hyperkey"
   "jordanbaird-ice"
   "rectangle-pro"
   "rocket"
-  "stats"
 
-  # Browsers
-  "google-chrome"
 ]

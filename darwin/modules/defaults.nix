@@ -28,7 +28,8 @@
       show-recents = false;
       static-only = false;
       tilesize = 36;
-      wvous-bl-corner = 2;
+      wvous-tl-corner = 5;
+      wvous-bl-corner = 1;
     };
 
     finder = {
@@ -50,6 +51,8 @@
     };
 
     NSGlobalDomain = {
+      _HIHideMenuBar = true;
+      AppleInterfaceStyle = "Dark";
       AppleFontSmoothing = 0;
       AppleKeyboardUIMode = 3;
       ApplePressAndHoldEnabled = false;
@@ -89,6 +92,16 @@
       TrackpadThreeFingerDrag = false;
     };
 
+  };
+
+  system.defaults.CustomUserPreferences = {
+    "com.apple.WindowServer" = {
+      disableWindowShadow = true;
+    };
+    "com.tinycast.app" = {
+      InitialKeyRepeat = 10;
+      KeyRepeat = 1;
+    };
   };
 
 }

@@ -61,6 +61,7 @@
         "github@claude-plugins-official" = false;
         "svelte-skills@svelte-skills-kit" = true;
         "rust-analyzer-lsp@claude-plugins-official" = true;
+        "flow-next@flow-next" = true;
       };
       extraKnownMarketplaces = {
         claude-code-toolkit = {
@@ -73,6 +74,12 @@
           source = {
             source = "github";
             repo = "spences10/svelte-skills-kit";
+          };
+        };
+        flow-next = {
+          source = {
+            source = "github";
+            repo = "gmickel/flow-next";
           };
         };
       };

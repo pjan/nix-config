@@ -35,6 +35,8 @@ in
       warn-dirty = false;
       keep-outputs = true;
       keep-derivations = true;
+      # Zscaler drops connections when too many run in parallel; keep it low.
+      http-connections = 10;
     }
     // lib.optionalAttrs (sslCertFile != null) {
       ssl-cert-file = sslCertFile;
