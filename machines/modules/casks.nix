@@ -13,7 +13,6 @@
     "handy"
     "hyperkey"
     "jordanbaird-ice"
-    # "rectangle-pro"
     "stats"
   ];
 

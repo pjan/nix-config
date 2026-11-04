@@ -13,13 +13,18 @@ _:
       # Commands that run after AeroSpace startup.
       # Available commands: https://nikitabobko.github.io/AeroSpace/commands
       # topmost is configured in sketchybar's own config; no override needed here.
-      "after-startup-command" = [];
+      "after-startup-command" = [ ];
 
       # Notify sketchybar immediately when the focused workspace changes.
       # exec-on-workspace-change takes [program, arg, ...], not an AeroSpace command.
-      "exec-on-workspace-change" = [ "/bin/bash" "-c" "sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE" ];
+      "exec-on-workspace-change" = [
+        "/bin/bash"
+        "-c"
+        "sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE"
+      ];
 
-      exec."env-vars"."PATH" = "/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin";
+      exec."env-vars"."PATH" =
+        "/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin";
 
       # Start AeroSpace at login
       "start-at-login" = false;
@@ -49,21 +54,52 @@ _:
 
       # Workspaces that stay alive even when empty/invisible
       "persistent-workspaces" = [
-        "1" "2" "3" "4" "5" "6" "7" "8" "9"
-        "A" "B" "C" "D" "E" "F" "G" "I" "M"
-        "N" "O" "P" "Q" "R" "S" "T" "U" "V"
-        "W" "X" "Y" "Z"
+        "1"
+        "2"
+        "3"
+        "4"
+        "5"
+        "6"
+        "7"
+        "8"
+        "9"
+        "A"
+        "B"
+        "C"
+        "D"
+        "E"
+        "F"
+        "G"
+        "I"
+        "M"
+        "N"
+        "O"
+        "P"
+        "Q"
+        "R"
+        "S"
+        "T"
+        "U"
+        "V"
+        "W"
+        "X"
+        "Y"
+        "Z"
       ];
 
-      "focus-follows-mouse" = { enabled = false; };
+      "focus-follows-mouse" = {
+        enabled = false;
+      };
 
       # See: https://nikitabobko.github.io/AeroSpace/guide#key-mapping
-      "key-mapping" = { preset = "qwerty"; };
+      "key-mapping" = {
+        preset = "qwerty";
+      };
 
       # Gaps between windows (inner-*) and monitor edges (outer-*)
       # See: https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
       gaps = {
-        inner.horizontal  = 10;
+        inner.horizontal = 10;
         inner.vertical = 10;
         outer.left = 15;
         outer.bottom = 15;
@@ -175,15 +211,39 @@ _:
         # 'service' binding mode
         # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
         service.binding = {
-          esc = [ "reload-config" "mode main" ];
-          r = [ "flatten-workspace-tree" "mode main" ]; # reset layout
-          f = [ "layout floating tiling" "mode main" ]; # toggle floating/tiling
-          backspace = [ "close-all-windows-but-current" "mode main" ];
+          esc = [
+            "reload-config"
+            "mode main"
+          ];
+          r = [
+            "flatten-workspace-tree"
+            "mode main"
+          ]; # reset layout
+          f = [
+            "layout floating tiling"
+            "mode main"
+          ]; # toggle floating/tiling
+          backspace = [
+            "close-all-windows-but-current"
+            "mode main"
+          ];
 
-          "alt-shift-h" = [ "join-with left" "mode main" ];
-          "alt-shift-j" = [ "join-with down" "mode main" ];
-          "alt-shift-k" = [ "join-with up" "mode main" ];
-          "alt-shift-l" = [ "join-with right" "mode main" ];
+          "alt-shift-h" = [
+            "join-with left"
+            "mode main"
+          ];
+          "alt-shift-j" = [
+            "join-with down"
+            "mode main"
+          ];
+          "alt-shift-k" = [
+            "join-with up"
+            "mode main"
+          ];
+          "alt-shift-l" = [
+            "join-with right"
+            "mode main"
+          ];
         };
 
       };

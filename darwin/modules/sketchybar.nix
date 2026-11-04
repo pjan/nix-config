@@ -3,7 +3,7 @@
 {
 
   services.sketchybar = {
-    enable = true;
+    enable = false;
     # The Lua config is managed by home-manager (users/pjan/modules/sketchybar.nix),
     # which symlinks users/pjan/sketchybar/ → ~/.config/sketchybar/.
     #

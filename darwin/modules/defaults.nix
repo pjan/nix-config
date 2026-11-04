@@ -96,7 +96,7 @@
 
   system.defaults.CustomUserPreferences = {
     NSGlobalDomain = {
-      AppleMenuBarAutoHide = 0;  # 0 = auto-hide in full screen only
+      AppleMenuBarAutoHide = 0; # 0 = auto-hide in full screen only
     };
     "com.apple.WindowServer" = {
       disableWindowShadow = true;

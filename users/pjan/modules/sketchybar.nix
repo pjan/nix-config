@@ -59,7 +59,10 @@ let
   sketchybar-cpu-usage = pkgs.stdenv.mkDerivation {
     name = "sketchybar-cpu-usage";
     src = cpu-src;
-    phases = [ "buildPhase" "installPhase" ];
+    phases = [
+      "buildPhase"
+      "installPhase"
+    ];
     buildPhase = "cc -O2 -o sketchybar-cpu-usage $src";
     installPhase = ''
       mkdir -p $out/bin
@@ -235,7 +238,10 @@ let
   sketchybar-sf-icon = pkgs.stdenv.mkDerivation {
     name = "sketchybar-sf-icon";
     src = sf-icon-src;
-    phases = [ "buildPhase" "installPhase" ];
+    phases = [
+      "buildPhase"
+      "installPhase"
+    ];
     buildPhase = ''
       cc -O2 -framework Foundation -framework AppKit \
         -o sketchybar-sf-icon $src
@@ -249,7 +255,10 @@ let
   sketchybar-wifi-icon = pkgs.stdenv.mkDerivation {
     name = "sketchybar-wifi-icon";
     src = wifi-src;
-    phases = [ "buildPhase" "installPhase" ];
+    phases = [
+      "buildPhase"
+      "installPhase"
+    ];
     buildPhase = ''
       cc -O2 -framework Foundation -framework AppKit -framework CoreWLAN \
         -o sketchybar-wifi-icon $src
