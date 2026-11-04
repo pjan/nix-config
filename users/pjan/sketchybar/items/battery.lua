@@ -1,21 +1,38 @@
 local sbar   = require("sketchybar")
 local colors = require("colors")
 
-local ICON_FONT = "Font Awesome 7 Free:Solid:14.0"
+local ICON_PNG = "/private/tmp/sketchybar-battery.png"
 
-local battery = sbar.add("item", "battery", {
-  position    = "right",
-  update_freq = 60,
-  icon = {
-    drawing       = true,
-    font          = ICON_FONT,
+-- Two items added rightmost-first: pct appears right of icon.
+local battery_pct = sbar.add("item", "battery_pct", {
+  position      = "right",
+  padding_left  = 0,
+  padding_right = 2,
+  icon          = { drawing = false },
+  label         = {
+    font          = "SF Pro Display:Regular:13.0",
     color         = colors.white,
-    padding_left  = 8,
-    padding_right = 4,
-  },
-  label = {
     padding_left  = 0,
-    padding_right = 8,
+    padding_right = 0,
+  },
+})
+
+local battery_icon = sbar.add("item", "battery_icon", {
+  position      = "right",
+  update_freq   = 60,
+  width         = 28,
+  y_offset      = 1,
+  padding_left  = 2,
+  padding_right = 0,
+  icon          = { drawing = false },
+  label         = { drawing = false },
+  background    = {
+    drawing = true,
+    color   = 0x00000000,
+    image   = {
+      string = ICON_PNG,
+      scale  = 0.5,
+    },
   },
 })
 
@@ -25,37 +42,37 @@ local function update_battery()
     local state = batt_info:match("%d+%%; (%a+)")
     if not pct then return end
 
-    local n          = tonumber(pct) or 0
-    local icon_color = colors.white
-    local lbl_color  = colors.white
-    local icon
+    local n        = tonumber(pct) or 0
+    local on_power = batt_info:match("'AC Power'") ~= nil
+    local sym      = on_power and "battery.100percent.bolt" or "battery.100percent"
+    local color    = "FFFFFF"
 
-    if state == "charging" then
-      icon = "\u{F0E7}"             -- fa-bolt
-    elseif state == "charged" then
-      icon = "\u{F240}"             -- fa-battery-full
-    elseif n > 75 then
-      icon = "\u{F240}"             -- fa-battery-full
-    elseif n > 50 then
-      icon = "\u{F241}"             -- fa-battery-three-quarters
-    elseif n > 25 then
-      icon = "\u{F242}"             -- fa-battery-half
-    elseif n > 10 then
-      icon = "\u{F243}"             -- fa-battery-quarter
-      icon_color = 0xFFFFAA55       -- orange warning
-      lbl_color  = 0xFFFFAA55
-    else
-      icon = "\u{F244}"             -- fa-battery-empty
-      icon_color = 0xFFFF6B6B       -- red critical
-      lbl_color  = 0xFFFF6B6B
+    -- macOS thresholds: yellow ≤20%, red ≤10% (only on battery)
+    if not on_power then
+      if n <= 10 then
+        color = "FF6B6B"
+      elseif n <= 20 then
+        color = "FFAA55"
+      end
     end
 
-    battery:set({
-      icon  = { string = icon, color = icon_color },
+    local var_value = n / 100.0
+    local lbl_color = color == "FFFFFF" and colors.white
+                   or color == "FFAA55" and 0xFFFFAA55
+                   or 0xFFFF6B6B
+
+    sbar.exec("sketchybar-sf-icon " .. ICON_PNG .. " " .. sym .. " "
+      .. string.format("%.2f", var_value) .. " " .. color .. " 18 2>/dev/null", function()
+      battery_icon:set({
+        background = { image = { string = ICON_PNG } },
+      })
+    end)
+
+    battery_pct:set({
       label = { string = pct .. "%", color = lbl_color },
     })
   end)
 end
 
-battery:subscribe({ "routine", "power_source_change", "system_woke" }, update_battery)
+battery_icon:subscribe({ "routine", "power_source_change", "system_woke" }, update_battery)
 update_battery()

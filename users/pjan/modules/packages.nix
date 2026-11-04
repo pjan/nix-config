@@ -11,6 +11,7 @@
     tools.security
 
     _1password-cli
+    ngrok
     age
     age-plugin-yubikey
     libfido2

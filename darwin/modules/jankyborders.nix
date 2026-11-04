@@ -3,7 +3,7 @@ _:
 {
 
   services.jankyborders = {
-    enable = true;
+    enable = false;
     hidpi = true;
     style = "round";
     active_color = "0xffe1e3e4";

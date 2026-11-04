@@ -4,6 +4,7 @@
   homebrew-cask,
   homebrew-core,
   homebrew-subtlesoft,
+  homebrew-tinycast,
   lib,
   pkgs,
   vars,
@@ -23,6 +24,7 @@ let
   # Machine-specific brews/casks (defined in machines/<hostname>.nix).
   machineBrews = vars.brew.brews or [ ];
   machineCasks = vars.brew.casks or [ ];
+  caskAppdir = vars.brew.caskAppdir or null;
 
 in
 lib.mkIf brewEnabled {
@@ -35,6 +37,7 @@ lib.mkIf brewEnabled {
       "homebrew/homebrew-cask" = homebrew-cask;
       "homebrew/homebrew-core" = homebrew-core;
       "nicowald/homebrew-subtlesoft" = homebrew-subtlesoft;
+      "abue-ammar/homebrew-tinycast" = homebrew-tinycast;
     };
     mutableTaps = false;
     autoMigrate = true;
@@ -54,6 +57,9 @@ lib.mkIf brewEnabled {
 
     brews = sharedBrews ++ machineBrews;
     casks = sharedCasks ++ machineCasks;
+    caskArgs = lib.optionalAttrs (caskAppdir != null) {
+      appdir = caskAppdir;
+    };
 
   };
 

@@ -51,7 +51,7 @@
     };
 
     NSGlobalDomain = {
-      _HIHideMenuBar = true;
+      _HIHideMenuBar = false;
       AppleInterfaceStyle = "Dark";
       AppleFontSmoothing = 0;
       AppleKeyboardUIMode = 3;
@@ -95,6 +95,9 @@
   };
 
   system.defaults.CustomUserPreferences = {
+    NSGlobalDomain = {
+      AppleMenuBarAutoHide = 0;  # 0 = auto-hide in full screen only
+    };
     "com.apple.WindowServer" = {
       disableWindowShadow = true;
     };

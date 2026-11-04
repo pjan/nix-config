@@ -69,6 +69,10 @@
       url = "github:nicowald/homebrew-subtlesoft";
       flake = false;
     };
+    homebrew-tinycast = {
+      url = "github:abue-ammar/homebrew-tinycast";
+      flake = false;
+    };
     secrets = {
       url = "git+ssh://git@github.com/pjan/nix-secrets.git";
       flake = false;
@@ -105,6 +109,7 @@
       homebrew-core,
       homebrew-cask,
       homebrew-subtlesoft,
+      homebrew-tinycast,
       secrets,
       beatport-dl,
       riptide,

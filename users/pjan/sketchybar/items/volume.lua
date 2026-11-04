@@ -1,21 +1,22 @@
-local sbar   = require("sketchybar")
-local colors = require("colors")
+local sbar = require("sketchybar")
 
-local ICON_FONT = "Font Awesome 7 Free:Solid:14.0"
+local ICON_PNG = "/private/tmp/sketchybar-volume.png"
 
 local volume = sbar.add("item", "volume", {
   position    = "right",
   update_freq = 1,
-  icon = {
-    drawing       = true,
-    font          = ICON_FONT,
-    color         = colors.white,
-    padding_left  = 8,
-    padding_right = 4,
-  },
-  label = {
-    padding_left  = 0,
-    padding_right = 8,
+  width       = 16,
+  y_offset    = 1,
+  padding_right = 25,
+  icon        = { drawing = false },
+  label       = { drawing = false },
+  background  = {
+    drawing = true,
+    color   = 0x00000000,
+    image   = {
+      string = ICON_PNG,
+      scale  = 0.5,
+    },
   },
 })
 
@@ -24,20 +25,22 @@ local function update_volume()
     local vol   = out:match("output volume:(%d+)")
     local muted = out:match("output muted:(%a+)")
 
+    local sym, var_value
     if muted == "true" then
-      volume:set({
-        icon  = { string = "\u{F026}", color = colors.white_dim },  -- fa-volume-off
-        label = { string = "mute",    color = colors.white_dim },
-      })
-    elseif vol then
-      local n    = tonumber(vol) or 0
-      local icon = n > 50 and "\u{F028}" or (n > 0 and "\u{F027}" or "\u{F026}")
-      -- fa-volume-up / fa-volume-down / fa-volume-off
-      volume:set({
-        icon  = { string = icon, color = colors.white },
-        label = { string = vol .. "%", color = colors.white },
-      })
+      sym = "speaker.slash.fill"
+      var_value = 0.0
+    else
+      local n = tonumber(vol) or 0
+      sym = "speaker.wave.3.fill"
+      var_value = n / 100.0
     end
+
+    sbar.exec("sketchybar-sf-icon " .. ICON_PNG .. " " .. sym .. " "
+      .. string.format("%.2f", var_value) .. " FFFFFF 14 2>/dev/null", function()
+      volume:set({
+        background = { image = { string = ICON_PNG } },
+      })
+    end)
   end)
 end
 

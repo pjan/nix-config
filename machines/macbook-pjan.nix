@@ -11,10 +11,11 @@
   nix.sslCertFile = "/etc/nix/ca-bundle.crt";
 
   brew = {
-    enable = false;
-    cleanup = "zap";
+    enable = true;
+    cleanup = null;
+    caskAppdir = "~/Applications";
     brews = [ ];
-    casks = [ ];
+    casks = (import ./modules/casks.nix).work;
   };
 
   # Machine-specific home-manager modules applied to all users on this machine.

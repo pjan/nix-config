@@ -14,11 +14,7 @@
     enable = true;
     cleanup = "zap";
     brews = [ ];
-    casks = [
-      # Brew cask rather than nixpkgs zed-editor: Zed self-updates in-app.
-      # NB: with cleanup = "zap", dropping this also trashes ~/.config/zed.
-      "zed"
-    ];
+    casks = (import ./modules/casks.nix).private;
   };
 
   # Machine-specific home-manager modules applied to all users on this machine.

@@ -46,6 +46,7 @@ inputs.darwin.lib.darwinSystem {
       homebrew-core
       homebrew-cask
       homebrew-subtlesoft
+      homebrew-tinycast
       ;
     inherit (inputs) secrets;
   };

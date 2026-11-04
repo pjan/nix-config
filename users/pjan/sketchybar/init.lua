@@ -8,6 +8,13 @@ require("default")
 require("items.spaces")     -- workspace pills + left_island bracket
 require("items.front_app")  -- active app name + icon
 
+-- Standalone items at far right, matching macOS menu bar layout.
+-- Added rightmost-first; visual order left→right: battery | volume | wifi | clock.
+require("items.clock")
+require("items.wifi")
+require("items.volume")
+require("items.battery")
+
 -- Stats island — added rightmost-first; visual order left→right: cpu | memory | network.
 require("items.network")
 require("items.memory")
@@ -22,14 +29,10 @@ sbar.add("bracket", "stats_island", { "cpu", "memory", "network" }, {
   },
 })
 
--- Right island — added rightmost-first; visual order left→right: dnd | wifi | vol | bat | clock.
-require("items.clock")
-require("items.battery")
-require("items.volume")
-require("items.wifi")
+-- Right island — added rightmost-first; visual order left→right: dnd.
 require("items.dnd")
 
-sbar.add("bracket", "right_island", { "dnd", "wifi", "volume", "battery", "clock" }, {
+sbar.add("bracket", "right_island", { "dnd" }, {
   background = {
     color         = colors.island,
     corner_radius = 9,

@@ -15,9 +15,9 @@
   nix.sslCertFile = null;
 
   brew = {
-    enable = false;
+    enable = true;
     cleanup = "zap";
     brews = [ ];
-    casks = [ ];
+    casks = (import ./modules/casks.nix).private;
   };
 }

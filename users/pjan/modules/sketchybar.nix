@@ -159,6 +159,93 @@ let
     }
   '';
 
+  # Generic SF Symbol renderer. Renders any SF Symbol to PNG with
+  # variableValue and hierarchicalColor, matching macOS native icon style.
+  # Usage: sketchybar-sf-icon <output.png> <symbol_name> <variable_value> [hex_color] [point_size]
+  sf-icon-src = pkgs.writeText "sketchybar-sf-icon.m" ''
+    #import <Foundation/Foundation.h>
+    #import <AppKit/AppKit.h>
+    #include <stdio.h>
+
+    int main(int argc, const char *argv[]) {
+      @autoreleasepool {
+        [NSApplication sharedApplication];
+
+        if (argc < 4) {
+          fprintf(stderr, "usage: sketchybar-sf-icon <out.png> <symbol> <varValue> [hex] [ptSize]\n");
+          return 1;
+        }
+
+        const char *outPath = argv[1];
+        NSString *symName   = [NSString stringWithUTF8String:argv[2]];
+        double varValue     = atof(argv[3]);
+        unsigned int hex    = argc > 4 ? 0 : 0xFFFFFF;
+        CGFloat pointSize   = argc > 5 ? atof(argv[5]) : 14.0;
+        CGFloat scale       = 2.0;
+
+        if (argc > 4) sscanf(argv[4], "%x", &hex);
+
+        NSColor *color = [NSColor colorWithSRGBRed:((hex >> 16) & 0xFF) / 255.0
+                                             green:((hex >> 8) & 0xFF) / 255.0
+                                              blue:(hex & 0xFF) / 255.0
+                                             alpha:1.0];
+
+        NSImage *sym = [NSImage imageWithSystemSymbolName:symName
+                                           variableValue:varValue
+                                 accessibilityDescription:nil];
+        if (!sym) { fprintf(stderr, "unknown symbol: %s\n", argv[2]); return 1; }
+
+        NSImageSymbolConfiguration *conf =
+          [[NSImageSymbolConfiguration configurationWithHierarchicalColor:color]
+           configurationByApplyingConfiguration:
+              [NSImageSymbolConfiguration configurationWithPointSize:pointSize
+                                                              weight:NSFontWeightRegular]];
+        NSImage *img = [sym imageWithSymbolConfiguration:conf];
+        if (!img) img = sym;
+
+        NSSize sz = [img size];
+        NSInteger pw = (NSInteger)ceil(sz.width * scale);
+        NSInteger ph = (NSInteger)ceil(sz.height * scale);
+
+        NSBitmapImageRep *rep = [[NSBitmapImageRep alloc]
+          initWithBitmapDataPlanes:NULL pixelsWide:pw pixelsHigh:ph
+          bitsPerSample:8 samplesPerPixel:4 hasAlpha:YES isPlanar:NO
+          colorSpaceName:NSDeviceRGBColorSpace bytesPerRow:0 bitsPerPixel:0];
+        [rep setSize:sz];
+
+        [NSGraphicsContext saveGraphicsState];
+        [NSGraphicsContext setCurrentContext:
+          [NSGraphicsContext graphicsContextWithBitmapImageRep:rep]];
+        [img drawInRect:NSMakeRect(0, 0, sz.width, sz.height)
+               fromRect:NSZeroRect
+              operation:NSCompositingOperationSourceOver
+               fraction:1.0
+         respectFlipped:YES hints:nil];
+        [NSGraphicsContext restoreGraphicsState];
+
+        NSData *png = [rep representationUsingType:NSBitmapImageFileTypePNG
+                                        properties:@{}];
+        [png writeToFile:[NSString stringWithUTF8String:outPath] atomically:YES];
+
+        return 0;
+      }
+    }
+  '';
+
+  sketchybar-sf-icon = pkgs.stdenv.mkDerivation {
+    name = "sketchybar-sf-icon";
+    src = sf-icon-src;
+    phases = [ "buildPhase" "installPhase" ];
+    buildPhase = ''
+      cc -O2 -framework Foundation -framework AppKit \
+        -o sketchybar-sf-icon $src
+    '';
+    installPhase = ''
+      mkdir -p $out/bin
+      install -m 755 sketchybar-sf-icon $out/bin/
+    '';
+  };
+
   sketchybar-wifi-icon = pkgs.stdenv.mkDerivation {
     name = "sketchybar-wifi-icon";
     src = wifi-src;
@@ -181,6 +268,7 @@ in
     sketchybar-app-font
     sketchybar-cpu-usage
     sketchybar-wifi-icon
+    sketchybar-sf-icon
   ];
 
   xdg.configFile."sketchybar".source = ../sketchybar;
