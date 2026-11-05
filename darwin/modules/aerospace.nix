@@ -99,12 +99,16 @@ _:
       # Gaps between windows (inner-*) and monitor edges (outer-*)
       # See: https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
       gaps = {
-        inner.horizontal = 10;
-        inner.vertical = 10;
-        outer.left = 15;
-        outer.bottom = 15;
-        outer.top = 15;
-        outer.right = 15;
+        inner = {
+          horizontal = 10;
+          vertical = 10;
+        };
+        outer = {
+          left = 15;
+          bottom = 15;
+          top = 15;
+          right = 15;
+        };
       };
 
       mode = {
