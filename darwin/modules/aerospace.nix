@@ -10,16 +10,6 @@ _:
 
       "after-startup-command" = [ ];
 
-      # Notify sketchybar when the focused workspace changes.
-      "exec-on-workspace-change" = [
-        "/bin/bash"
-        "-c"
-        "sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE"
-      ];
-
-      exec."env-vars"."PATH" =
-        "/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin";
-
       "start-at-login" = false;
 
       # Normalizations
@@ -270,12 +260,11 @@ _:
           "alt-equal" = "resize smart +50";
 
           # Focus monitor
-          "alt-left" = "focus-monitor left";
-          "alt-right" = "focus-monitor right";
+          "alt-bracketleft" = "focus-monitor left";
+          "alt-bracketright" = "focus-monitor right";
 
           # Move workspace to monitor
-          "alt-shift-left" = "move-workspace-to-monitor --wrap-around prev";
-          "alt-shift-right" = "move-workspace-to-monitor --wrap-around next";
+          "alt-shift-tab" = "move-workspace-to-monitor --wrap-around next";
 
           # Workspaces
           "alt-b" = "workspace B";
