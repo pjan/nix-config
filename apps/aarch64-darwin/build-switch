@@ -34,6 +34,17 @@ nix "${nix_args[@]}" build "path:.#${FLAKE_SYSTEM}" "${forward_args[@]}"
 RESULT="$(readlink -f ./result)"
 
 echo "${YELLOW}Switching to new generation...${NC}"
+
+# Remove mutable homebrew tap directories before activation so nix-homebrew's
+# autoMigrate doesn't fail with permission errors when trying to untap them.
+# nix-homebrew replaces these with nix-managed symlinks anyway.
+for tap in /opt/homebrew/Library/Taps/homebrew/homebrew-{cask,core,bundle}; do
+  if [[ -d "$tap" && ! -L "$tap" ]]; then
+    echo "${YELLOW}Removing mutable tap: ${tap}${NC}"
+    sudo rm -rf "$tap"
+  fi
+done
+
 # Activate directly from the pre-built result, bypassing flake re-evaluation.
 # darwin-rebuild switch does exactly: nix-env --set the profile, then run activate.
 sudo -H nix-env --profile /nix/var/nix/profiles/system --set "$RESULT"
