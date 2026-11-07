@@ -2,12 +2,16 @@
   config,
   lib,
   pkgs,
+  vars,
   ...
 }:
 
+let
+  isPrimaryUser = config.home.username == vars.machine.primaryUser;
+in
 {
 
-  programs.gpg = {
+  programs.gpg = lib.mkIf isPrimaryUser {
 
     enable = true;
 
@@ -36,7 +40,7 @@
 
   };
 
-  services.gpg-agent = {
+  services.gpg-agent = lib.mkIf isPrimaryUser {
     enable = true;
     # SSH keys are served by the 1Password agent (see ssh.nix).
     enableSshSupport = false;
