@@ -48,7 +48,7 @@
     "iina"
     "roon"
     "tidal"
-    "xld"
+    # "xld"
 
     # Productivity Tools
     "abue-ammar/tinycast/tinycast"
