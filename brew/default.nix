@@ -1,6 +1,5 @@
 {
   config,
-  homebrew-bundle,
   homebrew-cask,
   homebrew-core,
   homebrew-subtlesoft,
@@ -33,7 +32,6 @@ lib.mkIf brewEnabled {
     user = userName;
     enable = true;
     taps = {
-      "homebrew/homebrew-bundle" = homebrew-bundle;
       "homebrew/homebrew-cask" = homebrew-cask;
       "homebrew/homebrew-core" = homebrew-core;
       "nicowald/homebrew-subtlesoft" = homebrew-subtlesoft;
@@ -54,6 +52,10 @@ lib.mkIf brewEnabled {
     // lib.optionalAttrs (cleanup != null) {
       inherit cleanup;
     };
+
+    # Declare the nix-homebrew managed taps so `brew bundle --cleanup`
+    # doesn't try to untap them (they're read-only store paths).
+    taps = builtins.attrNames config.nix-homebrew.taps;
 
     brews = sharedBrews ++ machineBrews;
     casks = sharedCasks ++ machineCasks;

@@ -53,10 +53,6 @@
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    homebrew-bundle = {
-      url = "github:homebrew/homebrew-bundle";
-      flake = false;
-    };
     homebrew-core = {
       url = "github:homebrew/homebrew-core";
       flake = false;
@@ -105,7 +101,6 @@
       darwin,
       nix-homebrew,
       agenix,
-      homebrew-bundle,
       homebrew-core,
       homebrew-cask,
       homebrew-subtlesoft,

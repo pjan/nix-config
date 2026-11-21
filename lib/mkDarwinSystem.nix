@@ -42,7 +42,6 @@ inputs.darwin.lib.darwinSystem {
   specialArgs = {
     inherit inputs overlays vars;
     inherit (inputs)
-      homebrew-bundle
       homebrew-core
       homebrew-cask
       homebrew-subtlesoft
