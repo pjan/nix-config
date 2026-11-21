@@ -5,6 +5,9 @@ on:
     branches:
       - main
   pull_request:
+  # Dispatched by update-inputs: runs for PRs pushed with GITHUB_TOKEN are held
+  # for approval (action_required) instead of running.
+  workflow_dispatch:
 
 permissions:
   contents: read
