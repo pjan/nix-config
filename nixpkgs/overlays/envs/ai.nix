@@ -6,6 +6,7 @@ pkgs.buildEnv {
     bmad-method
     claude-code
     codex
+    herdr # agent multiplexer for the terminal
     chrome-devtools-mcp
     playwright-mcp
     rea-agents
